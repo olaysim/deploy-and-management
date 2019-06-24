@@ -1,0 +1,70 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "project": {
+    "name": "supv"
+  },
+  "apps": [
+    {
+      "root": "src/main/www",
+      "outDir": "target/classes/static",
+      "assets": [
+        "assets",
+        "favicon.ico"
+      ],
+      "index": "index.html",
+      "main": "main.ts",
+      "polyfills": "polyfills.ts",
+      "test": "../../test/javascript/webapp/test.ts",
+      "tsconfig": "tsconfig.app.json",
+      "testTsconfig": "../../test/javascript/webapp/tsconfig.spec.json",
+      "prefix": "app",
+      "styles": [
+        "styles.css",
+        "theme.scss",
+        "../../../node_modules/cookieconsent/build/cookieconsent.min.css",
+        "../../../node_modules/roboto-fontface/css/roboto/sass/roboto-fontface.scss",
+        "../../../node_modules/material-icons/iconfont/material-icons.scss",
+        "../../../node_modules/fine-uploader/fine-uploader/fine-uploader-new.css"
+      ],
+      "scripts": [
+          "../../../node_modules/cookieconsent/build/cookieconsent.min.js",
+          "../../../node_modules/chart.js/dist/Chart.min.js",
+          "../../../node_modules/jwt-decode/build/jwt-decode.min.js",
+          "../../../node_modules/fine-uploader/fine-uploader/fine-uploader.js"
+      ],
+      "environmentSource": "environments/environment.ts",
+      "environments": {
+        "dev": "environments/environment.ts",
+        "prod": "environments/environment.prod.ts"
+      }
+    }
+  ],
+  "e2e": {
+    "protractor": {
+      "config": "src/test/javascript/protractor.conf.js"
+    }
+  },
+  "lint": [
+    {
+      "project": "src/main/www/tsconfig.app.json",
+      "exclude": "**/node_modules/**"
+    },
+    {
+      "project": "src/test/javascript/webapp/tsconfig.spec.json",
+      "exclude": "**/node_modules/**"
+    },
+    {
+      "project": "src/test/javascript/e2e/tsconfig.e2e.json",
+      "exclude": "**/node_modules/**"
+    }
+  ],
+  "test": {
+    "karma": {
+      "config": "src/test/javascript/karma.conf.js"
+    }
+  },
+  "defaults": {
+    "styleExt": "css",
+    "component": {}
+  }
+}

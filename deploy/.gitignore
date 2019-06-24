@@ -1,0 +1,12 @@
+*/target/
+*/.settings
+*/.project
+*/.classpath
+*/.idea
+*/*.iml
+atlassian-ide-plugin.xml
+com_crashlytics_export_strings.xml
+crashlytics-build.properties
+crashlytics.properties
+/deploy/dependency-reduced-pom.xml
+

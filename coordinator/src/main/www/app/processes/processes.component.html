@@ -1,0 +1,11 @@
+<mat-card class="cardProcesslist">
+    <mat-card-header class="app-card-bg2 cardHeader">
+        <mat-card-title>Process Information</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="cardBodyContent">
+        <app-process-list></app-process-list>
+        <div fxLayout="row" fxLayoutAlign="end" class="addprogram">
+            <button mat-raised-button *ngIf="userService.isLoggedIn()" (click)="addProgram();"><mat-icon>add</mat-icon> New Program</button>
+        </div>
+    </mat-card-content>
+</mat-card>

@@ -1,0 +1,147 @@
+{
+    "host": "syslab-03.syslab.dk",
+    "nodes": [
+        "syslab-01",
+        "syslab-02",
+        "syslab-03",
+        "syslab-05",
+        "syslab-07",
+        "syslab-09",
+        "syslab-10",
+        "syslab-11",
+        "syslab-12",
+        "syslab-13",
+        "syslab-16",
+        "syslab-17",
+        "syslab-18",
+        "syslab-22",
+        "syslab-24",
+        "syslab-25",
+        "syslab-26",
+        "syslab-28",
+        "syslab-29",
+        "syslab-30",
+        "syslab-31",
+        "syslab-33",
+        "flexhouse-01",
+        "flexhouse-02",
+        "flexhouse-03",
+        "syslab-ui01",
+        "syslab-ui02",
+        "syslab-ui07",
+        "syslab-s01"
+    ],
+    
+	"name": "proxyagent",
+	"command": "java -Dio.netty.leakDetectionLevel=PARANOID -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -jar overlay-network.proxy.jar",
+	"startsecs": 10,
+	"exitcodes": "143",
+    
+	"files": [
+        "C:/projects/overlaynetwork/proxy/target/overlay-network.proxy.jar"
+    ],
+    
+    "folders": {
+        "C:/projects/overlaynetwork/proxy": "C:/projects/overlaynetwork/proxy/config"
+    },
+    
+    "paths": {
+		"config.conf": "/"
+	},
+    
+    "transforms": {
+        "syslab-01": {
+            "syslab-01.conf": "config.conf"
+        },
+        "syslab-02": {
+            "syslab-02.conf": "config.conf"
+        },
+        "syslab-03": {
+            "syslab-03.conf": "config.conf"
+        },
+        "syslab-04": {
+            "syslab-04.conf": "config.conf"
+        },
+        "syslab-05": {
+            "syslab-05.conf": "config.conf"
+        },
+        "syslab-07": {
+            "syslab-07.conf": "config.conf"
+        },
+        "syslab-09": {
+            "syslab-09.conf": "config.conf"
+        },
+        "syslab-10": {
+            "syslab-10.conf": "config.conf"
+        },
+        "syslab-11": {
+            "syslab-11.conf": "config.conf"
+        },
+        "syslab-12": {
+            "syslab-12.conf": "config.conf"
+        },
+        "syslab-13": {
+            "syslab-13.conf": "config.conf"
+        },
+        "syslab-16": {
+            "syslab-16.conf": "config.conf"
+        },
+        "syslab-17": {
+            "syslab-17.conf": "config.conf"
+        },
+        "syslab-18": {
+            "syslab-18.conf": "config.conf"
+        },
+        "syslab-22": {
+            "syslab-22.conf": "config.conf"
+        },
+        "syslab-24": {
+            "syslab-24.conf": "config.conf"
+        },
+        "syslab-25": {
+            "syslab-25.conf": "config.conf"
+        },
+        "syslab-26": {
+            "syslab-26.conf": "config.conf"
+        },
+        "syslab-28": {
+            "syslab-28.conf": "config.conf"
+        },
+        "syslab-29": {
+            "syslab-29.conf": "config.conf"
+        },
+        "syslab-30": {
+            "syslab-30.conf": "config.conf"
+        },
+        "syslab-31": {
+            "syslab-31.conf": "config.conf"
+        },
+        "syslab-32": {
+            "syslab-32.conf": "config.conf"
+        },
+        "syslab-33": {
+            "syslab-33.conf": "config.conf"
+        },
+        "flexhouse-01": {
+            "flexhouse-01.conf": "config.conf"
+        },
+        "flexhouse-02": {
+            "flexhouse-02.conf": "config.conf"
+        },
+        "flexhouse-03": {
+            "flexhouse-03.conf": "config.conf"
+        },
+        "syslab-ui01": {
+            "syslab-ui01.conf": "config.conf"
+        },
+        "syslab-ui02": {
+            "syslab-ui02.conf": "config.conf"
+        },
+        "syslab-ui07": {
+            "syslab-ui07.conf": "config.conf"
+        },
+        "syslab-s01": {
+            "syslab-s01.conf": "config.conf"
+        }
+	}
+}

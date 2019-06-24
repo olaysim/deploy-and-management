@@ -1,0 +1,449 @@
+= Supervisor REST API Documentation
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[getting-started]]
+== Getting started
+The REST API makes use of standard HTTP `GET`, `POST` and `DELETE` methods. +
+`GET` methods generally don't require authentication ie. methods that simply reads data. `POST` and `DELETE` methods, as in methods that performs some action or change in the Supervisor instance requires an authentication token.
+
+[TIP]
+====
+[.small]#The API for Supervisor is basically a REST implementation of the XML-RPC interface with some changes. This application is built to manage multiple distributed and decentralized instances of Supervisor and includes LDAP authentication for users and JSON Web Tokens for decentralied authentication. However, you may find the detailed description of the XML-RPC interface useful when trying to understand what the REST API does, the documentation can be found http://supervisord.org/api.html[here]. As well as the description of the Program configuration http://supervisord.org/configuration.html#program-x-section-settings[here]. You can find the full documentation for Supervisord http://supervisord.org/[here].#
+====
+
+In order to use the methods that requires authentication, you must first call the: `/api/auth` to authenticate. You'll then receive a JWT token, that you can use to call the authenticated methods. Generally the token is to be supplied as a header in the request of the `POST` and `DELETE` calls like so:
+// { "token":"xxxxyyyzzz" }
+[source,json]
+----
+Authorization: Bearer <token>
+----
+The header follows the http://self-issued.info/docs/draft-ietf-oauth-v2-bearer.html[bearer scheme]. You should be aware that this token is only valid for a limited amount of time. If you need a token for use with a Program (m2m communication), you should generate a token using `/api/token`. You can generate a token that is valid for a chosen amount of days. See <<token-api,here>> for more details.
+
+All the methods described in this documentation (except the <<distributed-api,Distributed API>>) operates on the local Supervisor instance that you have targeted in your hostname. I.e. If you use `https://syslab-03.syslab-dk:9080/api/stop/{program}`, then you'll only stop the program on syslab-03. To control multiple instances, you should use the <<distributed-api,Distributed API>>, where you can chose to target selected Supervisors or simply all Supervisors that are active on this network.
+
+[[authentication]]
+=== Authentication
+To authenticate, you need to call `*POST*` `/api/auth` with your _campusnet credentials_ (username/password) as the application uses the DTU AD and the SYSLAB LDAP to look up your user and to verify your privileges in SYSLAB.
+You will then receive a JWT token that you can use to authenticate against every other SYSLAB node (Supervisor instance) in the network.
+
+The JWT token provides distributed and decentralized authentication, which means that you do not need to authenticate against every host, you can use this token for every host and only need to authenticate once. (Of course the lifetime of this token is limited and if you need a token that is valid for longer you should look at <<token-api,`/api/token`>>.
+
+operation::authenticate[snippets='curl-request,http-request,request-fields,http-response,response-fields']
+//operation::authenticate[snippets='request-fields,curl-request,http-response']
+//.request
+//include::{snippets}/authenticate/http-request.adoc[]
+//include::{snippets}/authenticate/request-body.adoc[]
+//.response
+//include::{snippets}/authenticate/http-response.adoc[]
+//include::{snippets}/authenticate/response-body.adoc[]
+
+
+[[overview]]
+== Method overview
+This is a quick summary of the API methods that are exposed by this application. The methods are split into methods that are anonymous and those that require authentication, but otherwise they come in the sequence that they are documented in the ToC on the left side. For detailed information about the methods, see the individual descriptions of the methods.
+
+Authenticated methods requires you to <<authentication,authenticate>> and send the JWT token along with the REST call as a parameter in the `POST` body.
+
+.Anonymous methods
+`*GET*` <<supervisor-info,`/api/info`>> [.small]#Supervisor information# +
+`*GET*` <<process-info,`/api/info/{name}`>> [.small]#{name} is the name of the program# +
+`*GET*` <<all-process-info,`/api/info/all`>> [.small]#Information on all programs# +
+`*GET*` <<main-log,`/api/log?offset={offset}&length={length}`>> [.small]#{offset} and {length} are required# +
+`*GET*` <<program-log,`/api/log/{program}?offset={offset}&length={length}`>> [.small]#{offset} and {length} are required# +
+`*GET*` <<error-log,`/api/log/err/{program}?offset={offset}&length={length}`>> [.small]#{offset} and {length} are required# +
+`*GET*` <<tail-log,`/api/tail/{program}?offset={offset}&length={length}`>> [.small]#{offset} and {length} are required# +
+`*GET*` <<tail-error-log,`/api/tail/err/{program}?offset={offset}&length={length}`>> [.small]#{offset} and {length} are required# +
+`*GET*` <<list-groups,`/api/group`>> [.small]#Lists groups and programs#
+
+
+.Authenticated methods
+`*POST*` <<authentication,`/api/auth`>> [.small]#The body contains password and username# +
+`*POST*` <<clear-log,`/api/log/clear/{name}`>> [.small]#{name} is the name of the program to clear# +
+`*POST*` <<clear-all-logs,`/api/log/clear/all`>> +
+`*POST*` <<create-program,`/api/process`>> [.small]#Takes a body that is encoded as `form-data`, this is *important*#. +
+`*DELETE*` <<delete-program,`/api/process/{name}`>> [.small]#{name} is the name of the program to delete# +
+`*POST*` <<list-program,`/api/process/{name}`>> [.small]#Lists all files and folders for program# +
+`*POST*` <<start-program,`/api/start/{name}?wait={0/1}`>> [.small]#{name} is the name of the program to start, {wait} is optional# +
+`*POST*` <<start-program-group,`/api/start/group/{name}?wait={0/1}`>> [.small]#{name} is the name of the program group to start, {wait} is optional# +
+`*POST*` <<stop-program,`/api/stop/{name}?wait={0/1}`>> [.small]#{name} is the name of the program to stop, {wait} is optional# +
+`*POST*` <<stop-program-group,`/api/stop/group/{name}?wait={0/1}`>> [.small]#{name} is the name of the program group to stop, {wait} is optional# +
+`*POST*` <<signal-program,`/api/signal/{name}/{signal}`>> [.small]#{name} is the name of the program to signal, {signal} is name of signal (HUP or number)# +
+`*POST*` <<signal-program-group,`/api/signal/group/{name}/{signal}`>> [.small]#{name} is the name of the program GROUP to signal, {signal} is name of signal (HUP or number)# +
+`*POST*` <<signal-all-programs,`/api/signal/all/{signal}`>> [.small]#Signals all programs, {signal} is name of signal (HUP or number)# +
+`*POST*` <<update,`/api/update`>> [.small]#Updates configuration, available for normal users# +
+`*POST*` <<send-message,`/api/send/{name}`>> [.small]#{name} is the program to message, body contains the message# +
+`*POST*` <<send-comm-event,`/api/sendcomm`>> [.small]#The Body contains the token, type and data# +
+`*POST*` <<add-group,`/api/group/{group}/{name}?priority=1`>> [.small]#{group} is the name of the group, {name} is the name of the program and {priority} is optional# +
+`*DELETE*` <<delete-group,`/api/group/{group}/{name}`>> [.small]#{group} is the name of the group and {name} is the name of the program# +
+`*POST*` <<token-api,`/api/token`>> [.small]#The body contains the token, days and admin privileges# +
+`*POST*` <<shutdown,`/api/admin/shutdown`>> [.small]#Requires admin privileges# +
+`*POST*` <<restart,`/api/admin/restart`>> [.small]#Requires admin privileges# +
+`*POST*` <<reload,`/api/admin/reload`>> [.small]#Re-reads configuration, does not update configuration# +
+`*POST*` <<clear-main-log,`/api/admin/clearlog`>> [.small]#Requires admin privileges#
+
+
+.Distributed methods
+`*GET*` <<nodes-listnodes,`/api/nodes`>> [.small]#A list of nodes known to this Supervisor instance. (Anonymous)# +
+`*POST*` <<nodes-start,`/api/nodes/start/{name}`>> [.small]#Start a program on all or selected nodes# +
+`*POST*` <<nodes-stop,`/api/nodes/stop/{name}`>> [.small]#Stop a program on all or selected nodes# +
+`*POST*` <<nodes-startgroup,`/api/nodes/start/group/{name}`>> [.small]#Start a program group on all or selected nodes# +
+`*POST*` <<nodes-stopgroup,`/api/nodes/stop/group/{name}`>> [.small]#Stop a program group on all or selected nodes# +
+`*POST*` <<nodes-info,`/api/nodes/info/{name}`>> [.small]#Get program info on program from all or selected nodes# +
+`*POST*` <<nodes-upload,`/api/nodes/process`>> [.small]#Add or update a program on all or selected nodes# +
+`*DELETE*` <<nodes-delete,`/api/nodes/process/{name}`>> [.small]#Delete a program on all or selected nodes# +
+`*POST*` <<nodes-signal,`/api/nodes/signal/{name}/{signal}`>> [.small]#Send a signal to a program on all or selected nodes# +
+`*POST*` <<nodes-send,`/api/nodes/send/{name}`>> [.small]#Send a message to a program on all or selected nodes# +
+`*POST*` <<nodes-sendcomm,`/api/nodes/sendcomm`>> [.small]#Send a Comm Event to all or selected nodes# +
+`*POST*` <<nodes-restart,`/api/nodes/restart`>> [.small]#Restart the supervirsor on all or selected nodes# +
+`*POST*` <<nodes-clear,`/api/nodes/clear/{name}`>> [.small]#Clear the log of a program on all or selected nodes# +
+`*POST*` <<nodes-update,`/api/nodes/update`>> [.small]#Updates the configuration on all or selected nodes# +
+`*POST*` <<nodes-tail,`/api/nodes/tail/{name}`>> [.small]#Tail the log of a program on all or selcetd nodes# +
+`*POST*` <<nodes-tailerr,`/api/nodes/tail/err/{name}`>> [.small]#Tail the ERROR log of a program on all or selected nodes#
+
+
+
+[[info-api]]
+== Information API
+The Information API is used to get information about the Supervisor instance and process-information about the programs running in the Supervisor instance.
+
+[[supervisor-info]]
+=== Get Supervisor info
+Use `*GET*` `/api/info` to get information abut the running Supervisor instance. This method aggregates several XML-RPC methods into one REST method. A detailed description of the contents can be found http://supervisord.org/api.html#status-and-control[here].
+
+operation::supervisor-info[snippets='curl-request,http-request,http-response']
+
+[[process-info]]
+=== Get process information for program
+Use `*GET*` `/api/info/{name}` to get process-information about the programs running in the Supervisor instance. The {name} is the name of the program that you want information about. A detailed description of the content can be found http://supervisord.org/api.html#process-control[here].
+
+operation::process-info[snippets='curl-request,http-request,path-parameters,http-response']
+
+[[all-process-info]]
+=== Get process information for all programs
+Use `*GET*` `/api/info/all` to get a list of process-information. The list contains information about all the programs in the Supervisor instance.
+
+operation::all-process-info[snippets='curl-request,http-request,http-response']
+
+
+
+
+[[log-api]]
+== Logs API
+The logs can be read in many ways. There are two main methods to read the logs `log` and `tail`.
+`tail` provides a more efficient way to _tail_ the log than `log`. Use `log` to read chunks and `tail` to _tail_.
+
+
+[[main-log]]
+=== Read main Supervisor log
+Use `*GET*` `/api/log?offset={offset}&length={length}` to read length bytes from the Supervisor instance log. {offset} to start reading from. {length} number of bytes to read from the log.
+It can either return the entire log, a number of characters from the tail of the log, or a slice of the log specified by the offset and length parameters as described in details http://supervisord.org/api.html#supervisor.rpcinterface.SupervisorNamespaceRPCInterface.readLog[here].
+
+operation::main-log[snippets='curl-request,http-request,request-parameters,http-response']
+
+[[program-log]]
+=== Read log from program
+Use `*GET*` `/api/log/{name}?offset={offset}&length={length}` to read length bytes from {name}’s stdout log starting at {offset}. {name} the name of the process (or ‘group:name’). {offset} offset to start reading from. {length} number of bytes to read from the log.
+
+operation::program-log[snippets='curl-request,http-request,path-parameters,request-parameters,http-response']
+
+[[error-log]]
+=== Read ERROR log from program
+Use `*GET*` `/api/log/err/{name}?offset={offset}&length={length}` to read length bytes from {name}’s error log starting at {offset}. {name} the name of the process (or ‘group:name’). {offset} offset to start reading from. {length} number of bytes to read from the log.
+
+operation::program-error-log[snippets='curl-request,http-request,path-parameters,request-parameters,http-response']
+
+[[tail-log]]
+=== Tail log from program
+Use `*GET*` `/api/tail/{name}?offset={offset}&length={length}` provides a more efficient way to tail the (stdout) log. Requests {length} bytes from the {name}’s log, starting at {offset}. If the total log size is greater than (offset + length), the overflow flag is set and the (offset) is automatically increased to position the buffer at the end of the log. If less than {length} bytes are available, the maximum number of available bytes will be returned. (offset) returned is always the last offset in the log +1.
+
+{name} the name of the process (or ‘group:name’), {offset} offset to start reading from, {length} maximum number of bytes to return and  returns an array {string bytes, int offset, bool overflow}
+
+
+operation::tail-program-log[snippets='curl-request,http-request,path-parameters,request-parameters,http-response']
+
+[[tail-error-log]]
+=== Tail ERROR log from program
+Use `*GET*` `/api/tail/err/{name}?offset={offset}&length={length}` provides a more efficient way to tail the (stderr) log. Requests {length} bytes from the {name}’s log, starting at {offset}. If the total log size is greater than (offset + length), the overflow flag is set and the (offset) is automatically increased to position the buffer at the end of the log. If less than {length} bytes are available, the maximum number of available bytes will be returned. (offset) returned is always the last offset in the log +1.
+
+{name} the name of the process (or ‘group:name’), {offset} offset to start reading from, {length} maximum number of bytes to return and  returns an array {string bytes, int offset, bool overflow}
+
+operation::tail-program-error-log[snippets='curl-request,http-request,path-parameters,request-parameters,http-response']
+
+[[clear-log]]
+=== Clear program log
+Use `*POST*` `/api/log/clear/{name}` to clear the stdout and stderr logs for the {name} program and reopen them. {name} is the name of the process (or ‘group:name’).
+
+operation::clear-log[snippets='curl-request,http-request,path-parameters,request-headers,http-response,response-fields']
+
+[[clear-all-logs]]
+=== Clear all program logs
+Use `*POST*` `/api/log/clear/all` to clear the stdout and stderr logs for ALL programs. Note that instead of a boolean result, you get a list of process-statuses for each program.
+
+operation::clear-all-logs[snippets='curl-request,http-request,request-headers,http-response']
+
+
+
+
+
+
+
+
+
+[[command-api]]
+== Commands API
+
+[[create-program]]
+=== Create/upload/update program
+Use `*POST*` `/api/process` to create / upload / update a program.
+
+The request-body for this method is *not* JSON, but rather `form-data` encoded. The reason for this is to enable file upload via REST. Files are added as MultiPart files to the `form-data`.
+
+The method has 3 required fields and the rest is optional with sensible defaults. {token} is the authentication token, {name} is the name of the program. This can only contain ascii letters and numbers. Please avoid using anything else, as it will probably break and you will be unhappy. {command} is the command used to run your program. The command is run in the directory where your uploaded files are stored, so you should use a 'relative' command path.
+
+The rest of the fields are explained <<create-program_request_parameters,below>>. A detailed description of the fields can be found http://supervisord.org/configuration.html#program-x-section-settings[here].
+
+The {files} and {paths} are used to upload files. {files} can be used multiple times to add files and is a list of MultiPart files. {paths} is a _map_ of relative paths for each file. The idea is that you provide the relative path of each file that you add and the application will recreate the directory structure on the Supervisor instance. The _key_ is the filename and the _value_ is the relative path.
+
+When creating a program for the first time, the {name} and {command} is required, but if you are updating an existing program then you only need to provide the {name} (the {command} is not required) and whatever other fields that you wish to update. It could be one of the options or maybe you want to update/overwrite the files.
+
+The _request_ example snippets below are.. pretty bad... You should explore how to create a `POST` call with `form-data` encoded data using Ajax or a REST Client (depending on what language your are using).
+
+operation::upload-program[snippets='curl-request,http-request,request-headers,request-parameters,http-response,response-fields']
+
+[[delete-program]]
+=== Delete program
+Use `*DELETE*` `/api/process/{name}` to remove a program from the Supervisor instance. {name} is the name of the program. The program will first be "stopped" and then deleted. As it may take a short time to stop the program, this method can be slow (it is blocking). If the method fails, the program may be left in an unknown state, you should contact an admin to resolve the issue.
+
+operation::delete-program[snippets='curl-request,http-request,path-parameters,request-headers,http-response,response-fields']
+
+[[list-program]]
+=== List program files and folders
+Use `*POST*` `/api/process/{name}` to get a list of files and folders for a program. {name} is the name of the program.
+
+The result is a list of all the files and folders, relative to the directory of where the files are stored, not from the root folder of the filesystem.
+
+operation::list-program-files[snippets='curl-request,http-request,path-parameters,request-headers,http-response']
+
+[[start-program]]
+=== Start program
+Use `*POST*` `/api/start/{name}?wait={0/1}` to start a program. {name} is the name of the program. {wait} defines whether to block and wait for the program to start before the method returns or to return right away. The default is to return immediately. If {wait} is set to 0, then `/api/info/{name}` could be used to poll the status of the program. {wait} is optional.
+
+operation::start-program[snippets='curl-request,http-request,path-parameters,request-parameters,request-headers,http-response,response-fields']
+
+[[start-program-group]]
+=== Start program group
+Use `*POST*` `/api/start/group/{name}?wait={0/1}` to start a program group. {name} is the name of the program group. {wait} defines whether to block and wait for the program group to start before the method returns or to return right away. The default is to return immediately. {wait} is optional.
+
+Programs can be added and removed from groups with <<add-group,`/api/group`>>.
+
+operation::start-program-group[snippets='curl-request,http-request,path-parameters,request-parameters,request-headers,http-response']
+
+[[stop-program]]
+=== Stop program
+Use `*POST*` `/api/stop/{name}?wait={0/1}` to stop a program. {name} is the name of the program. {wait} defines whether to block and wait for the program to stop before the method returns or to return right away. The default is to return immediately. If {wait} is set to 0, then `/api/info/{name}` could be used to poll the status of the program. {wait} is optional.
+
+operation::stop-program[snippets='curl-request,http-request,path-parameters,request-parameters,request-headers,http-response,response-fields']
+
+[[stop-program-group]]
+=== Stop program group
+Use `*POST*` `/api/stop/group/{name}?wait={0/1}` to stop a program group. {name} is the name of the program group. {wait} defines whether to block and wait for the program group to stop before the method returns or to return right away. The default is to return immediately. {wait} is optional.
+
+Programs can be added and removed from groups with <<add-group,`/api/group`>>.
+
+operation::stop-program-group[snippets='curl-request,http-request,path-parameters,request-parameters,request-headers,http-response']
+
+[[signal-program]]
+=== Send signal to program
+Use `*POST*` `/api/signal/{name}/{signal}` to send an arbitrary UNIX signal to the process named by {name}. {signal} is the signal to send and can be a name e.g. 'HUP' or number '1'.
+
+operation::signal-program[snippets='curl-request,http-request,path-parameters,request-headers,http-response,response-fields']
+
+[[signal-program-group]]
+=== Send signal to program group
+Use `*POST*` `/api/signal/group/{name}/{signal}` to send an arbitrary UNIX signal to all the programs in the program group named by {name}. {signal} is the signal to send and can be a name e.g. 'HUP' or number '1'.
+
+operation::signal-program-group[snippets='curl-request,http-request,path-parameters,request-headers,http-response']
+
+[[signal-all-programs]]
+=== Send signal to all programs
+Use `*POST*` `/api/signal/all/{signal}` to send an arbitrary UNIX signal to ALL the programs on the Supervisor instance. {signal} is the signal to send and can be a name e.g. 'HUP' or number '1'.
+
+operation::signal-all-programs[snippets='curl-request,http-request,path-parameters,request-headers,http-response']
+
+[[update]]
+=== Update configuration
+Use `*POST*` `/api/update` to update the configuration. Reloads configurations and restart programs as needed.
+
+operation::update[snippets='curl-request,http-request,request-headers,http-response,response-fields']
+
+[[send-message]]
+=== Send a message to program
+Use `*POST*` /api/send/{name}` to send a string of chars to the stdin of the program name {name}.
+
+operation::send-message[snippets='curl-request,http-request,path-parameters,request-headers,request-fields,http-response,response-fields']
+
+[[send-comm-event]]
+=== Send an event to the supervisor remote comm interface
+Use `*POST*` `/api/sendcomm` to send an event that will be received by event listener subprocesses subscribing to the RemoteCommunicationEvent. The Supervisor instance has an internal webserver that programs can hook into and listen to events. Excatly how this is done is unknown, but you are encouraged to browse the http://supervisord.org[Supervisor documentation].
+
+operation::send-comm-event[snippets='curl-request,http-request,request-headers,request-fields,http-response,response-fields']
+
+[[add-group]]
+=== Add program to group
+Use `*POST*` `/api/group/{group}/{name}` to add a program to a group. {name} is the name of the program and {group} is the name of the group. You will need to call `/api/reload` to have the changes take effect.
+
+operation::add-process-to-group[snippets='curl-request,http-request,path-parameters,request-parameters,request-headers,http-response,response-fields']
+
+[[delete-group]]
+=== Remove program from group
+Use `*DELETE*` `/api/group/{group}/{name}` to remove a program from a group. {name} is the name of the program and {group} is the name of the group. You will need to call `/api/reload` to have the changes take effect.
+
+operation::delete-process-from-group[snippets='curl-request,http-request,path-parameters,request-headers,http-response,response-fields']
+
+[[list-groups]]
+=== List groups and programs
+Use `*GET*` `/api/group` to get a list of groups. Each group contains a list programs that are currently in that group.
+
+operation::list-groups[snippets='curl-request,http-request,http-response']
+
+
+
+
+
+
+[[token-api]]
+== Token API
+The token that you get when authenticating with `/api/auth` is only valid for a limited amount of time.
+If you need a token for a program / m2m, then you should use this API to generate a token that will last a long time.
+
+Normal users can generate a token that is valid up to 60 days. +
+Admin users can generate a token that is valid for as long as they feel like. (But please _think_... a token with "unlimited" validity is a catastrophic security hole in our system!)
+
+[[generate-token]]
+=== Generate token
+Use `*POST*` `/api/token` to generate an authentication token with a long validity, primarily for use with m2m communication. The request-body takes 3 parameters: {token}, {days} and {admin}. {token} is the authentication token that you got when logging in with `/api/auth` (but of course any valid token can be used). {days} is how many days the token should be valid for and is optional, default is 30 days. {admin} is whether the token should give admin privileges, it's optional and default is false (only an authentication token that already has admin privileges can be used to create a token with admin privileges).
+
+operation::generate-token[snippets='curl-request,http-request,request-headers,request-fields,http-response,response-fields']
+
+
+
+
+
+
+[[admin-api]]
+== Administrative API
+Using the administrative API requires *admin* privileges. +
+_You won't get it.. so don't ask!_ +
+But if you need to have any of these commands run, please contact Anders B. P. mailto:abp@elektro.dtu.dk[abp@elektro.dtu.dk]
+
+[[shutdown]]
+=== Stop the Supervisor instance
+Use `*POST*` `/api/admin/shutdown` to _stop_ the running Supervisor instance.
+
+You should know, that this web interface runs as an instance in Supervisor, and stopping the instance will kill the web interface. Now you know, proceed with knowledge.
+
+operation::stop-supervisor[snippets='curl-request,http-request,request-headers,http-response,response-fields']
+
+[[restart]]
+=== Restart the Supervisor instance
+Use `*POST*` `/api/admin/restart` to  restarts the Supervisor instance. Programs that are set to autostart will.. autostart.
+
+operation::restart-supervisor[snippets='curl-request,http-request,request-headers,http-response,response-fields']
+
+[[reload]]
+=== Reload configuration
+Use `*POST*` `/api/admin/reload` to re-read the configuration.
+
+The result contains three arrays containing names of process groups:
+
+* `added` gives the process groups that have been added
+* `changed` gives the process groups whose contents have changed
+* `removed` gives the process groups that are no longer in the configuration
+
+operation::reload[snippets='curl-request,http-request,request-headers,request-fields,http-response']
+
+[[clear-main-log]]
+=== Clear the main log of the Supervisor
+Use `*POST*` `/api/admin/clearlog` to clear the main log of the Supervisor instance.
+
+operation::clear-main-log[snippets='curl-request,http-request,request-headers,http-response,response-fields']
+
+
+
+
+[[distributed-api]]
+== Distributed API
+
+[TIP]
+====
+[.small]#The distributed API is not a complete functionality copy the "local" API, but rather functions needed to handle the nodes in a distributed and decentralized scenario. A case in point: if you wanted list of 'current supervisor info' from all nodes, that is not a function exposed through the Distributed API, you would have to query each node yourself.#
+====
+
+[[nodes-listnodes]]
+=== List nodes
+Use `*GET*` `/api/nodes` A list of nodes known to this Supervisor instance. (Anonymous)
+
+[[nodes-start]]
+=== Start program on nodes
+Use `*POST*` `/api/nodes/start/{name}` Start a program on all or selected nodes
+
+[[nodes-stop]]
+=== Stop program on nodes
+Use `*POST*` `/api/nodes/stop/{name}` Stop a program on all or selected nodes
+
+[[nodes-startgroup]]
+=== Start program group on nodes
+Use `*POST*` `/api/nodes/start/group/{name}` Start a program group on all or selected nodes
+
+[[nodes-stopgroup]]
+=== Stop program group on nodes
+Use `*POST*` `/api/nodes/stop/group/{name}` Stop a program group on all or selected nodes
+
+[[nodes-info]]
+=== Get info for program on nodes
+Use `*POST*` `/api/nodes/info/{name}` Get program info on program from all or selected nodes
+
+[[nodes-upload]]
+=== Add/update program to nodes
+Use `*POST*` `/api/nodes/process` Add or update a program on all or selected nodes
+
+[[nodes-delete]]
+=== Delete program from nodes
+Use `*DELETE*` `/api/nodes/process/{name}` Delete a program on all or selected nodes
+
+[[nodes-signal]]
+=== Send a signal to program on nodes
+Use `*POST*` `/api/nodes/signal/{name}/{signal}` Send a signal to a program on all or selected nodes
+
+[[nodes-send]]
+=== Send a message to program on nodes
+Use `*POST*` `/api/nodes/send/{name}` Send a message to a program on all or selected nodes
+
+[[nodes-sendcomm]]
+=== Send a Comm Event to nodes
+Use `*POST*` `/api/nodes/sendcomm` Send a Comm Event to all or selected nodes
+
+[[nodes-restart]]
+=== Restart Supervisor on nodes
+Use `*POST*` `/api/nodes/restart` Restart the supervisor on all or selected nodes
+
+[[nodes-clear]]
+=== Clear log for program on nodes
+Use `*POST*` `/api/nodes/clear/{name}` Clear the log of a program on all or selected nodes
+
+[[nodes-update]]
+=== Updates supervisor config on nodes
+Use `*POST*` `/api/nodes/update` Updates the configuration on all or selected nodes
+
+[[nodes-tail]]
+=== Tail the log of a program on nodes
+Use `*POST*` `/api/nodes/tail/{name}` Tail the log of a program on all or selcetd nodes
+
+[[nodes-tailerr]]
+=== Tail the ERROR log of a program on nodes
+Use `*POST*` `/api/nodes/tail/err/{name}` Tail the ERROR log of a program on all or selected nodes

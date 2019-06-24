@@ -1,0 +1,260 @@
+syntax = "proto3";
+package dk.syslab.controller;
+option java_package = "dk.syslab.controller.rpc.protobuf";
+option java_outer_classname = "Messages";
+
+enum ResultCode {
+    OK = 0;
+    BAD_REQUEST = 1;
+    UNAUTHORIZED = 2;
+    INTERNAL_SERVER_ERROR = 3;
+    UNKNOWN = 4;
+}
+
+message Token {
+    string token = 1;
+}
+
+message Result {
+    bool success = 1;
+    string message = 2;
+    ResultCode code = 3;
+}
+
+message ReloadResult {
+    bool success = 1;
+    string message = 2;
+    ResultCode code = 3;
+    repeated string added = 4;
+    repeated string changed = 5;
+    repeated string removed = 6;
+}
+
+message LogRequest {
+    string token = 1;
+    string name = 2;
+    int32 offset = 3;
+    int32 length = 4;
+}
+
+message LogResult {
+    bool success = 1;
+    string message = 2;
+    ResultCode code = 3;
+    string log = 4;
+}
+
+message NameRequest {
+    string token = 1;
+    string name = 2;
+    bool wait = 3;
+}
+
+message ProcessInfo {
+    bool success = 1;
+    string message = 2;
+    ResultCode resultCode = 3;
+    string name = 4;
+    string group = 5;
+    string description = 6;
+    int32 start = 7;
+    int32 stop = 8;
+    int32 now = 9;
+    string statename = 10;
+    int32 state = 11;
+    string spawnerr = 12;
+    int32 exitstatus = 13;
+    string logfile = 14;
+    string stdOutLogfile = 15;
+    string stdErrLogfile = 16;
+    int32 pid = 17;
+}
+
+message ProcessInfos {
+    bool success = 1;
+    string message = 2;
+    ResultCode code = 3;
+    repeated ProcessInfo processInfo = 4;
+}
+
+message ProcessStatus {
+    string name = 1;
+    string description = 2;
+    int32 status = 3;
+    string group = 4;
+}
+
+message ProcessStatusses {
+    bool success = 1;
+    string message = 2;
+    ResultCode code = 3;
+    repeated ProcessStatus processStatus = 4;
+}
+
+message NameDataRequest {
+    string token = 1;
+    string name = 2;
+    string data = 3;
+    string type = 4;
+}
+
+message SupervisorInfo {
+    bool success = 1;
+    string message = 2;
+    ResultCode resultCode = 3;
+    string apiVersion = 4;
+    string packageVersion = 5;
+    string identifier = 6;
+    string state = 7;
+    int32 code = 8;
+    int32 pid = 9;
+}
+
+message Chunk {
+    string token = 1;
+    string programUuid = 2;
+    string fileUuid = 3;
+    bytes data = 4;
+}
+
+message Program {
+    string token = 1;
+    string name = 2;
+    string command = 3;
+    int32 priority = 4;
+    bool autostart = 5;
+    string autorestart = 6;
+    int32 startsecs = 7;
+    int32 startretries = 8;
+    string exitcodes = 9;
+    int32 stopwaitsecs = 10;
+    string environment = 11;
+    map<string, string> paths = 12;
+    map<string, string> transforms = 13;
+    string programUuid = 14;
+    map<string, string> uuidFilenames = 15;
+    map<string, string> uuidPaths = 16;
+    bool success = 17;
+    string message = 18;
+    ResultCode resultCode = 19;
+}
+
+message GroupNameRequest {
+    string token = 1;
+    string group = 2;
+    string name = 3;
+    int32 pritority = 4;
+}
+
+message Group {
+    message GroupNames {
+        repeated string name = 1;
+    }
+    bool success = 1;
+    string message = 2;
+    ResultCode code = 3;
+    map<string, GroupNames> groups = 4;
+}
+
+message TailLogResult {
+    bool success = 1;
+    string message = 2;
+    ResultCode code = 3;
+    string log = 4;
+    int32 offset = 5;
+    bool overflow = 6;
+}
+
+message ProgramFilesResult {
+    bool success = 1;
+    string message = 2;
+    ResultCode code = 3;
+    repeated string files = 4;
+}
+
+message ProcessStatisticsResult {
+    message ProcessData {
+        int64 timestamp = 1;
+        repeated double cpu = 2;
+        repeated double memory = 3;
+        repeated int64 vsz = 4;
+        repeated int64 rss = 5;
+        int32 length = 6;
+    }
+    bool success = 1;
+    string message = 2;
+    ResultCode code = 3;
+    ProcessData weeks = 4;
+    ProcessData hour = 5;
+}
+
+message SystemStatisticsResult {
+    message SystemData {
+        int64 timestamp = 1;
+        repeated double user = 2;
+        repeated double nice = 3;
+        repeated double system = 4;
+        repeated double idle = 5;
+        repeated double load1 = 6;
+        repeated double load2 = 7;
+        repeated double load3 = 8;
+        repeated int64 memory = 9;
+        repeated int64 swap = 10;
+        int32 length = 11;
+    }
+    bool success = 1;
+    string message = 2;
+    ResultCode code = 3;
+    SystemData weeks = 4;
+    SystemData hour = 5;
+}
+
+message SystemInformationResult {
+    bool success = 1;
+    string message = 2;
+    ResultCode code = 3;
+    string os = 4;
+    string manufacturer = 5;
+    string baseboardManufacturer = 6;
+    string baseboardModel = 7;
+    int32 cpu = 8;
+    int32 logicalCpu = 9;
+    int64 memory = 10;
+    string memoryStr = 11;
+    int64 swap = 12;
+    string swapStr = 13;
+}
+
+message Node {
+    string name = 1;
+    string address = 2;
+    int32 statuscode = 3;
+    int32 running = 4;
+    int32 total = 5;
+    int64 timestamp = 6;
+}
+
+message NodeMap {
+    map<string, Node> nodeMap = 1;
+}
+
+message SortedNodes {
+    repeated Node node = 1;
+}
+
+message NodeStatistics {
+    int32 supervisorsRunning = 1;
+    int32 supervisorsTotal = 2;
+    int32 processesRunning = 3;
+    int32 processesTotal = 4;
+}
+
+message NodeListResult {
+    bool success = 1;
+    string message = 2;
+    ResultCode code = 3;
+    repeated string node = 4;
+    map<string, string> address = 5;
+    Node self = 6;
+    NodeStatistics statistics = 7;
+}

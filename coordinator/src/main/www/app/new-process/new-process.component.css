@@ -1,0 +1,41 @@
+.newDetails {
+    background-color: #ffffff;
+    min-height: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.messagewidth {
+    width: 350px;
+}
+
+.messagewidth_long {
+    width: 650px;
+}
+.messagewidth_short {
+    width: 280px;
+}
+.short_space {
+    width: 90px;
+}
+
+.new-box-program {
+    display: block;
+    width: 700px;
+    min-height: 400px;
+}
+.new-box-files {
+    display: block;
+    width: 840px;
+    min-height: 400px;
+}
+
+.vspace {
+    height: 1em;
+}
+
+.new-submit {
+    margin-right: 20px;
+    color: #ffffff;
+}

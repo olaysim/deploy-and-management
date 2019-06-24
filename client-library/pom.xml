@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
+
+    <groupId>dk.syslab</groupId>
+    <artifactId>supv-client</artifactId>
+    <version>1.0-RELEASE</version>
+    <name>REST Client for Supervisor</name>
+
+    <url>http://www.powerlab.dk/facilities/syslab.aspx</url>
+    <issueManagement>
+        <system>GitLab</system>
+        <url>https://git.elektro.dtu.dk/syslab/syslab/issues</url>
+    </issueManagement>
+    <scm>
+        <connection>scm:git:git@git.elektro.dtu.dk:syslab-adm/applications/supv.git</connection>
+        <url>https://git.elektro.dtu.dk/syslab-adm/applications/supv</url>
+    </scm>
+    <organization>
+        <url>http://www.cee.elektro.dtu.dk/</url>
+        <name>DTU Elektro (CEE)</name>
+    </organization>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <additionalparam>-Xdoclint:none</additionalparam>
+        <artifactory.phase>deploy</artifactory.phase> <!-- workaround bug when trying to run mvn with no arguments -->
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>extMaven</id>
+            <properties>
+                <artifactory.url>https://maven.elektro.dtu.dk/artifactory</artifactory.url>
+                <artifactory.phase>validate</artifactory.phase>
+                <artifactory.password>${env.ARTIFACTORY_PASSWORD_EXT}</artifactory.password>
+            </properties>
+        </profile>
+    </profiles>
+
+    <build>
+        <defaultGoal>package</defaultGoal>
+        <finalName>${project.artifactId}-${project.version}</finalName>
+
+		<plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.20.1</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.4</version>
+                <configuration>
+                    <quiet>true</quiet>
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                    <notimestamp>true</notimestamp>
+                    <encoding>UTF-8</encoding>
+                    <docencoding>UTF-8</docencoding>
+                    <charset>UTF-8</charset>
+                    <linksource>true</linksource>
+                    <destDir>${project.build.directory}/javadoc</destDir>
+                    <overview>${project.basedir}/src/main/javadoc/overview.html</overview>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>${project.artifactId}-${project.version}</finalName>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.apache.http</pattern>
+                                    <shadedPattern>shaded.org.apache.http</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.apache.commons</pattern>
+                                    <shadedPattern>shaded.org.apache.commons</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.fasterxml.jackson</pattern>
+                                    <shadedPattern>shaded.com.fasterxml.jackson</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jfrog.buildinfo</groupId>
+                <artifactId>artifactory-maven-plugin</artifactId>
+                <version>2.6.1</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>build-info</id>
+                        <phase>${artifactory.phase}</phase>
+                        <goals>
+                            <goal>publish</goal>
+                        </goals>
+                        <configuration>
+                            <deployProperties>
+                                <groupId>${project.groupId}</groupId>
+                                <artifactId>${project.artifactId}</artifactId>
+                                <version>${project.version}</version>
+                            </deployProperties>
+                            <publisher>
+                                <contextUrl>${artifactory.url}</contextUrl>
+                                <username>${env.ARTIFACTORY_USER}</username>
+                                <password>${artifactory.password}</password>
+                                <repoKey>libs-release-local</repoKey>
+                                <snapshotRepoKey>libs-snapshot-local</snapshotRepoKey>
+                            </publisher>
+                            <buildInfo>
+                                <agentName>${env.CI_SERVER_NAME}</agentName>
+                                <agentVersion>${env.CI_SERVER_VERSION}</agentVersion>
+                                <buildName>${env.CI_PROJECT_NAME}</buildName>
+                                <buildNumber>${env.CI_JOB_ID}</buildNumber>
+                                <buildRetentionCount>10</buildRetentionCount>
+                                <buildUrl>${env.CI_PROJECT_URL}/builds/${env.CI_JOB_ID}</buildUrl>
+                            </buildInfo>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+		</plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>4.5.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.9.4</version>
+        </dependency>
+
+        <!-- TEST Dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- need to proxy through our public repository because org.jfrog.buildinfo:artifactory-maven-plugin:2.6.1
+	     is not available in standard repositories, and earlier versions do not work.
+		 Added default maven repository to list to speed things up... -->
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>http://repo.maven.apache.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>maven-elektro</id>
+            <name>libs-release</name>
+            <url>https://maven.elektro.dtu.dk/artifactory/libs-release</url>
+        </repository>
+        <repository>
+            <snapshots />
+            <id>maven-elektro-snapshots</id>
+            <name>libs-snapshot</name>
+            <url>https://maven.elektro.dtu.dk/artifactory/libs-snapshot</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>http://repo.maven.apache.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>maven-elektro</id>
+            <name>plugins-release</name>
+            <url>https://maven.elektro.dtu.dk/artifactory/plugins-release</url>
+        </pluginRepository>
+        <pluginRepository>
+            <snapshots />
+            <id>maven-elektro-snapshots</id>
+            <name>plugins-snapshot</name>
+            <url>https://maven.elektro.dtu.dk/artifactory/plugins-snapshot</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>

@@ -1,0 +1,179 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    /*width: 100%;*/
+    /*height: 100%;*/
+    background-color: #fafafa;
+}
+
+@font-face {
+    font-family: "Neo Sans W01";
+    src: url(/assets/fonts/2959d89a-a257-4ce7-9cda-63e00f275369.eot?#iefix) format('embedded-opentype')
+}
+
+@font-face {
+    font-family: "Neo Sans W01";
+    src: url(/assets/fonts/2959d89a-a257-4ce7-9cda-63e00f275369.eot?#iefix);
+    src: url(/assets/fonts/a32c3a17-3242-461c-a048-ca8e775582b1.woff?#iefix) format("woff"), url(/assets/fonts/97316a7d-9db1-4dc1-bd87-e24103d88a81.ttf) format("truetype"), url(/assets/fonts/1287ca7a-3ce7-40b7-9612-061d4c793f04.svg#1287ca7a-3ce7-40b7-9612-061d4c793f04) format("svg")
+}
+
+@font-face {
+    font-family: "Neo Sans W01 Medium";
+    src: url(/assets/fonts/85c8556d-8a76-4037-a2e2-0f5fd9dabc03.eot?#iefix) format('embedded-opentype')
+}
+
+@font-face {
+    font-family: "Neo Sans W01 Medium";
+    src: url(/assets/fonts/85c8556d-8a76-4037-a2e2-0f5fd9dabc03.eot?#iefix);
+    src: url(/assets/fonts/b0eddbbb-9e8e-4e08-bde1-965bb945f73a.woff?#iefix) format("woff"), url(/assets/fonts/b2931674-c992-42a0-aa22-e9cb15d3383d.ttf) format("truetype"), url(/assets/fonts/af9d27b2-3ca0-47ca-8d5d-4c4665df6305.svg#af9d27b2-3ca0-47ca-8d5d-4c4665df6305) format("svg")
+}
+
+@font-face {
+    font-family: "Neo Sans W01 Bold";
+    src: url(/assets/fonts/a0b14394-4dd9-4421-98cf-dfe2f8dc6251.eot?#iefix) format('embedded-opentype')
+}
+
+@font-face {
+    font-family: "Neo Sans W01 Bold";
+    src: url(/assets/fonts/a0b14394-4dd9-4421-98cf-dfe2f8dc6251.eot?#iefix);
+    src: url(/assets/fonts/ecedcc38-3aec-48a5-a693-fbfac59dd0ed.woff?#iefix) format("woff"), url(/assets/fonts/2974017c-634d-4238-9381-e3f0b95a150c.ttf) format("truetype"), url(/assets/fonts/0b4cc213-f9e9-4cb1-aa3c-64e91a1328dc.svg#0b4cc213-f9e9-4cb1-aa3c-64e91a1328dc) format("svg")
+}
+
+.neoSans {
+    font-family: "Neo Sans W01";
+    font-weight: 400
+}
+
+.neoSansMedium {
+    font-family: "Neo Sans W01 Medium";
+    font-weight: 400
+}
+
+.neoSansBold {
+    font-family: "Neo Sans W01 Bold";
+    font-weight: 400
+}
+
+* {
+    font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+
+.toolbar-fill {
+    flex: 1 1 auto;
+}
+
+mat-toolbar a {
+    text-decoration: none;
+    display: inline-block;
+}
+.mat-toolbar-row, .mat-toolbar-single-row {
+    height:50px !important;
+}
+
+.space {
+    width: 10px;
+}
+
+.mat-menu-content a {
+    text-decoration: none;
+}
+
+/*.mat-snack-bar-container {*/
+    /*background-color: #607D8B !important;*/
+/*}*/
+
+mat-sidenav-container {
+    position: fixed !important;
+    align-items: center;
+    justify-content: center;
+    /*height: 100%;*/
+    min-height: calc(100% - 50px);
+    width: 100%;
+    min-width: 100%;
+}
+
+mat-sidenav {
+    width: 200px;
+}
+
+mat-sidenav-content {
+    padding: 10px 20px 10px 20px;
+    position: fixed !important;
+    width: calc(100% - 240px);
+    height: calc(100% - 70px) !important;
+}
+
+.cardHeader {
+    padding: 5px 10px 0 10px !important;
+    color: #ffffff;
+    height: 25px;
+}
+.cardContent {
+    padding: 5px 10px 0 10px !important;
+}
+
+/*light background: #424242;*/
+/*dark background: 303030*/
+
+
+/*mat-toolbar {*/
+    /*justify-content: space-between;*/
+/*}*/
+
+/*header.material-header.material-header {*/
+    /*background-color: black;*/
+/*}*/
+
+
+.mat-expansion-panel-body {
+    padding: 0 !important;
+}
+
+.mat-tooltip {
+    background-color: #fafafa !important;
+    color: #000000 !important;
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12) !important;
+    margin-top: 4px !important;
+}
+
+code {
+    font-family: 'Roboto Mono', monospace;
+}
+
+.box {
+    /*box-shadow: 0px 0px 1px 1px rgba(0,0,0,0.2);*/
+    margin-bottom: 20px;
+    margin-right: 20px;
+    display: inline-block;
+    vertical-align: top;
+}
+.box-header {
+    font: 500 20px/32px Roboto, "Helvetica Neue", sans-serif;
+    /*padding: 2px 8px 5px 8px;*/
+    padding: 2px 10px 2px 15px;
+    /*background-color: rgba(0, 0, 0, 0.05);*/
+    /*border-bottom: 1px solid rgba(0, 0, 0, 0.5);*/
+    /*box-shadow: 0px 10px 5px -10px rgba(0,0,0,0.7);*/
+    box-shadow: 0 10px 4px -10px rgba(0,0,0,0.6);
+}
+.box-content {
+    padding: 10px 20px;
+}
+.box-vspace {
+    height: 1em;
+}
+.box-center {
+    margin: 0 auto;
+}
+
+.qq-upload-file {
+    width: 700px !important;
+}
+.qq-uploader {
+    padding: 0 !important;
+    min-height: 195px !important;
+}
+.qq-upload-list li {
+    font-size: inherit !important;
+    padding: 1px 5px 2px 5px !important;
+}

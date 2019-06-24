@@ -1,0 +1,93 @@
+syntax = "proto3";
+package dk.syslab.controller;
+option java_package = "dk.syslab.controller.rpc.protobuf";
+option java_outer_classname = "DistributedMessages";
+
+import "messages.proto";
+
+message DistributedToken {
+    string token = 1;
+    repeated string nodes = 2;
+}
+
+message DistributedNameRequest {
+    string token = 1;
+    repeated string nodes = 2;
+    string name = 3;
+    bool wait = 4;
+
+}
+
+message ResultStatus {
+    string name = 1;
+    bool success = 2;
+    string message = 3;
+    ResultCode code = 4;
+}
+
+message DistributedResultStatus {
+    bool success = 1;
+    string message = 2;
+    ResultCode code = 3;
+    map<string, ResultStatus> results = 4;
+}
+
+message DistributedProcessStatusses {
+    bool success = 1;
+    string message = 2;
+    ResultCode code = 3;
+    map<string, ProcessStatusses> results = 4;
+}
+
+message DistributedProcessInfo {
+    bool success = 1;
+    string message = 2;
+    ResultCode code = 3;
+    map<string, ProcessInfo> results = 4;
+}
+
+message DistributedProgram {
+    string token = 1;
+    string name = 2;
+    string command = 3;
+    int32 priority = 4;
+    bool autostart = 5;
+    string autorestart = 6;
+    int32 startsecs = 7;
+    int32 startretries = 8;
+    string exitcodes = 9;
+    int32 stopwaitsecs = 10;
+    string environment = 11;
+    map<string, string> paths = 12;
+    map<string, string> transforms = 13;
+    string programUuid = 14;
+    map<string, string> uuidFilenames = 15;
+    map<string, string> uuidPaths = 16;
+    bool success = 17;
+    string message = 18;
+    ResultCode code = 19;
+    repeated string nodes = 20;
+}
+
+message DistributedNameDataRequest {
+    string token = 1;
+    repeated string nodes = 2;
+    string name = 3;
+    string data = 4;
+    string type = 5;
+}
+
+message DistributedLogRequest {
+    string token = 1;
+    repeated string nodes = 2;
+    string name = 3;
+    int32 offset = 4;
+    int32 length = 5;
+}
+
+message DistributedTailLogResult {
+    bool success = 1;
+    string message = 2;
+    ResultCode code = 3;
+    map<string, TailLogResult> results = 4;
+}

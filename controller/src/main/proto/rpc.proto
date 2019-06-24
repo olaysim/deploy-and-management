@@ -1,0 +1,86 @@
+syntax = "proto3";
+package dk.syslab.controller;
+option java_package = "dk.syslab.controller.rpc.protobuf";
+option java_outer_classname = "Rpc";
+
+import "messages.proto";
+import "distributed-messages.proto";
+
+service XmlRpc {
+    // xmlrpc rpc
+    rpc clearLog(Token) returns (Result) {};
+    rpc shutdown(Token) returns (Result) {};
+    rpc restart(Token) returns (Result) {};
+    rpc reloadConfig(Token) returns (ReloadResult) {};
+    rpc readMainLog(LogRequest) returns (LogResult) {};
+    rpc getProcessInfo(NameRequest) returns (ProcessInfo) {};
+    rpc getAllProcessInfo(Token) returns (ProcessInfos) {};
+    rpc startProcess(NameRequest) returns (Result) {};
+    rpc startAllProcesses(NameRequest) returns (ProcessStatusses) {};
+    rpc startProcessGroup(NameRequest) returns (ProcessStatusses) {};
+    rpc stopProcess(NameRequest) returns (Result) {};
+    rpc stopAllProcesses(NameRequest) returns (ProcessStatusses) {};
+    rpc stopProcessGroup(NameRequest) returns (ProcessStatusses) {};
+    rpc signalProcess(NameDataRequest) returns (Result) {};
+    rpc signalProcessGroup(NameDataRequest) returns (ProcessStatusses) {};
+    rpc signalAllProcesses(NameDataRequest) returns (ProcessStatusses) {};
+    rpc sendProcessStdin(NameDataRequest) returns (Result) {};
+    rpc sendRemoteCommEvent(NameDataRequest) returns (Result) {};
+    rpc addProcessGroup(NameRequest) returns (Result) {};
+    rpc removeProcessGroup(NameRequest) returns (Result) {};
+    rpc readLog(LogRequest) returns (LogResult) {};
+    rpc readErrorLog(LogRequest) returns (LogResult) {};
+    rpc tailLog(LogRequest) returns (TailLogResult) {};
+    rpc tailErrorLog(LogRequest) returns (TailLogResult) {};
+    rpc clearProcesslogs(NameRequest) returns (Result) {};
+    rpc clearAllProcesslogs(Token) returns (ProcessStatusses) {};
+    rpc update(Token) returns (Result) {};
+    rpc getSupervisorInfo(Token) returns (SupervisorInfo) {};
+}
+
+service FileRpc {
+    // file rpc
+    rpc uploadFiles(stream Chunk) returns (Result) {};
+    rpc uploadProgram(Program) returns (Result) {};
+    rpc deleteProgram(NameRequest) returns (Result) {};
+    rpc addProgramToGroup(GroupNameRequest) returns (Result) {};
+    rpc removeProgramFromGroup(GroupNameRequest) returns (Result) {};
+    rpc listGroups(Token) returns (Group) {};
+    rpc listProgramFiles(NameRequest) returns (ProgramFilesResult) {};
+    rpc readProgramConfiguration(NameRequest) returns (Program) {};
+}
+
+service StatisticsRpc {
+    // statistics rpc
+    rpc getProcessStatistics(NameRequest) returns (ProcessStatisticsResult) {};
+    rpc getSystemStatistics(Token) returns (SystemStatisticsResult) {};
+    rpc getSystemInformation(Token) returns (SystemInformationResult) {};
+}
+
+service BroadcastRpc {
+    // broadcast rpc
+    rpc getSelf(Token) returns (Node) {};
+    rpc getNodeMap(Token) returns (NodeMap) {};
+    rpc getSortedNodes(Token) returns (SortedNodes) {};
+    rpc getNodeStatistics(Token) returns (NodeStatistics) {};
+    rpc getNodeList(Token) returns (NodeListResult) {};
+}
+
+service DistributedRpc {
+    // distributed rpc
+    rpc distributedStartProgram(DistributedNameRequest) returns (DistributedResultStatus) {};
+    rpc distributedStopProgram(DistributedNameRequest) returns (DistributedResultStatus) {};
+    rpc distributedStartProgramGroup(DistributedNameRequest) returns (DistributedProcessStatusses) {};
+    rpc distributedStopProgramGroup(DistributedNameRequest) returns (DistributedProcessStatusses) {};
+    rpc distributedGetProgramInfo(DistributedNameRequest) returns (DistributedProcessInfo) {};
+    rpc distributedUploadProgram(DistributedProgram) returns (DistributedResultStatus) {};
+    rpc distributedDeleteProgram(DistributedNameRequest) returns (DistributedResultStatus) {};
+    rpc distributedSignalProgram(DistributedNameDataRequest) returns (DistributedResultStatus) {};
+    rpc distributedSendMessage(DistributedNameDataRequest) returns (DistributedResultStatus) {};
+    rpc distributedSendCommEvent(DistributedNameDataRequest) returns (DistributedResultStatus) {};
+    rpc distributedRestartSupervisor(DistributedToken) returns (DistributedResultStatus) {};
+    rpc distributedClearProcessLogs(DistributedNameRequest) returns (DistributedResultStatus) {};
+    rpc distributedUpdate(DistributedToken) returns (DistributedResultStatus) {};
+    rpc distributedTailLog(DistributedLogRequest) returns (DistributedTailLogResult) {};
+    rpc distributedTailErrorLog(DistributedLogRequest) returns (DistributedTailLogResult) {};
+}

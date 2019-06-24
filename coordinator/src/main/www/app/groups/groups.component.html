@@ -1,0 +1,37 @@
+<mat-card class="cardGroups">
+    <mat-card-header class="app-card-bg3 cardHeader">
+        <mat-card-title>Program Groups</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="cardWideContent">
+        <h2>Add program to group</h2>
+        <p>If the group does not exist it will be created.<br>
+            You can also choose from existing groups.</p>
+
+        <form (ngSubmit)="onAddProgramSubmit()" #addProgramForm="ngForm">
+            <div fxLayout="row">
+                <mat-form-field hideRequiredMarker class="messagewidth">
+                    <input id="program" [(ngModel)]="programGroup.program" name="program" #program="ngModel" matInput placeholder="Program Name" required autofocus>
+                    <mat-error>You must enter a program name</mat-error>
+                </mat-form-field>
+            </div>
+            <div fxLayout="row">
+                <mat-form-field hideRequiredMarker class="messagewidth">
+                    <input id="group" [(ngModel)]="programGroup.group" name="group" #group="ngModel" matInput placeholder="Group Name" (focus)="groupFilteredOptions = filterOptions(programGroup.group ? programGroup.group : '', groupOptions)" (ngModelChange)="groupFilteredOptions = filterOptions(programGroup.group ? programGroup.group : '', groupOptions)" [matAutocomplete]="groupauto" required>
+                    <mat-autocomplete autoActiveFirstOption #groupauto="matAutocomplete">
+                        <mat-option *ngFor="let option of groupFilteredOptions" [value]="option">
+                            {{ option }}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error>You must enter or chose a group</mat-error>
+                </mat-form-field>
+            </div>
+            <mat-form-field hideRequiredMarker class="messagewidth">
+                <input type="number" min="0" id="priority" [(ngModel)]="programGroup.priority" name="priority" #priority="ngModel" matInput placeholder="Priority (default 999)">
+                <mat-error>You must enter a priority for the program group</mat-error>
+            </mat-form-field>
+            <div fxLayout="row" fxLayoutAlign="end" class="messagewidth">
+                <button type="submit" mat-raised-button [disabled]="!addProgramForm.form.valid || !userService.isLoggedIn()">Add</button>
+            </div>
+        </form>
+    </mat-card-content>
+</mat-card>

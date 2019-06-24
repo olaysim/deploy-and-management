@@ -1,0 +1,147 @@
+.cardDetails {
+    background-color: #ffffff;
+    min-height: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.material-icons {
+    /*font-size: 1.5em;*/
+    vertical-align: middle;
+}
+
+.tab-content {
+    padding: 10px 20px;
+}
+
+.clearlog {
+    padding: 10px 20px 5px 20px;
+}
+
+.log-content {
+    margin: 10px 20px;
+    padding: 5px 8px;
+    overflow: auto;
+    max-height: 1000px;
+    min-height: 500px;
+    border: 1px solid #e8e8e8;
+    font-family: 'Roboto Mono', monospace;
+    line-height: 0.9em;
+}
+
+.clearbutton {
+    color: #ffffff !important;
+}
+
+.cardStats {
+    background-color: #ffffff;
+    min-height: 240px;
+    max-width: 100%;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.syschart {
+    float: left;
+    width: 25%;
+    min-width: 350px;
+    min-height: 200px;
+}
+
+.messagewidth {
+    width: 350px;
+}
+
+.messagewidth_long {
+    width: 650px;
+}
+.messagewidth_short {
+    width: 280px;
+}
+.short_space {
+    width: 90px;
+}
+
+.vspace {
+    height: 1em;
+}
+.bigvspace {
+    height: 5em;
+}
+
+.clearbutton {
+    margin-top: 5px;
+    color: #000000 !important;
+}
+
+.details-wrapper {
+    max-width: 1210px;
+    min-height: 400px;
+}
+.details-box {
+    width: 580px;
+    min-height: 400px;
+}
+
+
+.program-wrapper {
+    width: 900px;
+    min-height: 400px;
+}
+.details-box-program {
+    width: 650px;
+    min-height: 400px;
+}
+.details-box-control {
+    width: 200px;
+    min-height: 400px;
+
+}
+.details-box-files {
+    width: 873px;
+    min-height: 400px;
+}
+
+.signal-wrapper {
+    max-width: 580px;
+    min-height: 400px;
+}
+
+.files-wrapper {
+    width: auto !important;
+    min-width: 700px;
+    min-height: 400px;
+    max-width: 1000px;
+}
+
+.program-submit-big {
+    width: 160px;
+    height: 80px;
+    color: #ffffff;
+    font-size: 24px;
+}
+
+.program-delete {
+    font-size: 10px;
+    margin-top: 10px;
+}
+
+.filelistline {
+    font-family: 'Roboto Mono', monospace;
+}
+
+.filelist-content {
+    padding: 5px 8px;
+    /*overflow: auto;*/
+    min-height: 500px;
+    border: 1px solid #e8e8e8;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.8em;
+    line-height: 0.9em;
+}
+
+.icon-button {
+    float: left;
+    margin-right: 15px;
+}

@@ -1,0 +1,30 @@
+<div class="horizontalspace" *ngIf="screenWidth > 500"></div>
+<mat-card class="container">
+    <div class="loginfailed" *ngIf="!loginWasSuccessful">Login failed!</div>
+    <br *ngIf="!loginWasSuccessful" />
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm" *ngIf="!userService.isLoggedIn()">
+        <div fxLayout="row">
+        <mat-form-field hideRequiredMarker>
+            <input id="username" [(ngModel)]="model.username" name="username" #input #username="ngModel" matInput placeholder="Username" required autofocus>
+            <mat-error>You must enter a username</mat-error>
+        </mat-form-field>
+        </div>
+        <div fxLayout="row">
+        <mat-form-field hideRequiredMarker>
+            <input id="password" [(ngModel)]="model.password" name="password" #password="ngModel" matInput type="password" placeholder="Password" required>
+            <mat-error>You must enter a password</mat-error>
+        </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="end" class="alittlespace">
+            <button type="submit" mat-raised-button [disabled]="!loginForm.form.valid">Login</button>
+        </div>
+    </form>
+
+    <div fxLayout="row" *ngIf="userService.isLoggedIn()">
+        <strong>Already Logged in!</strong>
+        <br/><br/>
+    </div>
+    <div fxLayout="row" *ngIf="userService.isLoggedIn()">
+        <button (click)="logout()" mat-raised-button>Logout</button>
+    </div>
+</mat-card>

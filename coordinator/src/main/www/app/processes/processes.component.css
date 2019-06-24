@@ -1,0 +1,15 @@
+.cardProcesslist {
+    background-color: #ffffff;
+    min-height: 100%;
+    max-width: 100%;
+    padding: 0;
+}
+
+.addprogram {
+    padding: 20px;
+}
+
+button {
+    background-color: #38ad00;
+    color: #ffffff;
+}

@@ -1,0 +1,9 @@
+<mat-expansion-panel [@.disabled]="chrome">
+    <mat-expansion-panel-header #myheader >
+        <a routerLink="/processes" class="titlelink">Processes</a>
+    </mat-expansion-panel-header>
+    <div *ngFor="let process of programsInfo">
+        <a routerLink="/details/{{process.name}}"><mat-icon>keyboard_arrow_right</mat-icon>{{process.name}}</a>
+    </div>
+</mat-expansion-panel>
+

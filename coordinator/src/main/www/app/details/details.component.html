@@ -1,0 +1,316 @@
+<mat-card class="cardStats" *ngIf="labels.length > 0">
+    <mat-card-header class="app-card-bg3 cardHeader">
+        <mat-card-title>Process Statistics for {{name}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="cardWideContent">
+        <div fxLayout="row wrap" style="text-align: center">
+            <!--<div fxFlex="25%">-->
+            <div class="syschart">
+                <canvas #cpuChart=base-chart
+                        baseChart
+                        [chartType]="'line'"
+                        [datasets]="cpuSource"
+                        [labels]="labels"
+                        [options]="cpuOptions"
+                        [legend]="true"></canvas>
+            </div>
+            <!--</div>-->
+            <!--<div fxFlex="25%">-->
+            <div class="syschart">
+                <canvas #memChart=base-chart
+                        baseChart
+                        [chartType]="'line'"
+                        [datasets]="memSource"
+                        [labels]="labels"
+                        [options]="memOptions"
+                        [colors]="memColors"
+                        [legend]="true"></canvas>
+            </div>
+            <!--</div>-->
+            <!--<div fxFlex="25%">-->
+            <div class="syschart">
+                <canvas #vszChart=base-chart
+                        baseChart
+                        [chartType]="'line'"
+                        [datasets]="vszSource"
+                        [labels]="labels"
+                        [options]="vszOptions"
+                        [colors]="vszColors"
+                        [legend]="true"></canvas>
+            </div>
+            <!--</div>-->
+            <!--<div fxFlex="25%">-->
+            <div class="syschart">
+                <canvas #rssChart=base-chart
+                        baseChart
+                        [chartType]="'line'"
+                        [datasets]="rssSource"
+                        [labels]="labels"
+                        [options]="rssOptions"
+                        [colors]="rssColors"
+                        [legend]="true"></canvas>
+            </div>
+            <!--</div>-->
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<mat-card class="cardDetails">
+    <mat-card-header class="app-card-bg5 cardHeader">
+        <mat-card-title>Process Details for {{name}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="cardBodyContent">
+
+        <mat-tab-group class="tab-group" [selectedIndex]="selectedIndex" (selectedTabChange)="onTabClick($event)">
+            <mat-tab label="details">
+                <ng-template mat-tab-label>
+                    <mat-icon>mode_edit</mat-icon> Details
+                </ng-template>
+                <div class="tab-content">
+                    <div class="program-wrapper">
+                        <div class="box details-box-program">
+                            <div class="box-header">Program Details</div>
+                            <div class="box-content">
+                                <form (ngSubmit)="onProgramSubmit()" id="programForm" #programForm="ngForm">
+                                    <div fxLayout="row">
+                                        <mat-form-field hideRequiredMarker class="messagewidth_long">
+                                            <input id="programname" [(ngModel)]="programModel.name" name="programname" #programname="ngModel" matInput placeholder="Program name" readonly required>
+                                            <mat-error>You must enter a name for the program</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div fxLayout="row">
+                                        <mat-form-field hideRequiredMarker class="messagewidth_long">
+                                            <input id="command" [(ngModel)]="programModel.command" name="command" #command="ngModel" matInput placeholder="Command" required autofocus>
+                                            <mat-error>You must enter a command to start the program</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div fxLayout="row">
+                                        <mat-checkbox color="primary" id="autostart" [(ngModel)]="programModel.autostart" name="autostart" #autostart="ngModel">Autostart program</mat-checkbox>
+                                    </div>
+                                    <div fxLayout="row">
+                                        <mat-form-field hideRequiredMarker class="messagewidth_short">
+                                            <input type="number" min="0" id="priority" [(ngModel)]="programModel.priority" name="priority" #priority="ngModel" matInput placeholder="Priority (default 999)">
+                                            <mat-error>You must enter a priority for the program</mat-error>
+                                        </mat-form-field>
+                                        <div class="short_space"></div>
+                                        <mat-form-field hideRequiredMarker class="messagewidth_short">
+                                            <mat-select id="autorestart" [(ngModel)]="programModel.autorestart" name="autorestart" #autorestart="ngModel" placeholder="Autorestart (default 'unexpected')">
+                                                <mat-option>unexpected</mat-option>
+                                                <mat-option>true</mat-option>
+                                                <mat-option>false</mat-option>
+                                            </mat-select>
+                                            <mat-error>You must select an autorestart reason</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div fxLayout="row">
+                                        <mat-form-field hideRequiredMarker class="messagewidth_short">
+                                            <input type="number" min="1" id="startsecs" [(ngModel)]="programModel.startsecs" name="startsecs" #startsecs="ngModel" matInput placeholder="Start Seconds (default 1)">
+                                            <mat-error>You must enter the number of seconds to wait for the program to start</mat-error>
+                                        </mat-form-field>
+                                        <div class="short_space"></div>
+                                        <mat-form-field hideRequiredMarker class="messagewidth_short">
+                                            <input type="number" min="1" id="startretries" [(ngModel)]="programModel.startretries" name="startretries" #startretries="ngModel" matInput placeholder="Start Retries (default 3)">
+                                            <mat-error>You must enter the number of retries for starting the program</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div fxLayout="row">
+                                        <mat-form-field hideRequiredMarker class="messagewidth_short">
+                                            <input id="exitcodes" [(ngModel)]="programModel.exitcodes" name="exitcodes" #exitcodes="ngModel" matInput placeholder="Exit Codes (default '0, 2')">
+                                            <mat-error>You must enter the exit codes for the program</mat-error>
+                                        </mat-form-field>
+                                        <div class="short_space"></div>
+                                        <mat-form-field hideRequiredMarker class="messagewidth_short">
+                                            <input type="number" min="1" id="stopwaitsecs" [(ngModel)]="programModel.stopwaitsecs" name="stopwaitsecs" #stopwaitsecs="ngModel" matInput placeholder="Stop Wait Seconds (default 10)">
+                                            <mat-error>You must enter the number of seconds to wait for the program to stop</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div fxLayout="row">
+                                        <mat-form-field hideRequiredMarker class="messagewidth_long">
+                                            <input id="environment" [(ngModel)]="programModel.environment" name="environment" #environment="ngModel" matInput placeholder="Environment">
+                                            <mat-error>You must enter a string of values defining the environment</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="box details-box-control">
+                            <div class="box-header">Program Control</div>
+                            <div class="box-content">
+                                <!--bg1=red, bg2=blue, bg3=orange,bg4=green,bg5=purple-->
+                                <div class="icon-button" [class.app-card-bg4]="processInfo.state == 20" [class.app-card-bg3]="processInfo.state == 10 || processInfo.state == 30">
+                                    <button mat-icon-button (click)="start(); $event.stopPropagation();" [disabled]="processInfo.state == 20 || !userService.isLoggedIn()" matTooltip="Start {{processInfo.name}}"><mat-icon>play_arrow</mat-icon></button></div>
+                                <div class="icon-button" [class.app-card-bg1]="processInfo.state == 0" [class.app-card-bg3]="processInfo.state == 40 || processInfo.state == 100 || processInfo.state == 200" [class.app-card-bg2]="processInfo.state == 1000">
+                                    <button mat-icon-button (click)="stop(); $event.stopPropagation();" [disabled]="processInfo.state == 0 || !userService.isLoggedIn()" matTooltip="Stop {{processInfo.name}}"><mat-icon>stop</mat-icon></button></div>
+                                <div class="icon-button" style="margin-right: 0px;">
+                                    <button mat-icon-button (click)="restart(); $event.stopPropagation();" [disabled]="!userService.isLoggedIn()" matTooltip="Restart {{processInfo.name}}"><mat-icon>replay</mat-icon></button></div>
+                                <div style="clear: both;"></div>
+                                <div class="bigvspace"></div>
+                                <button type="submit" class="program-submit-big app-card-bg4" mat-raised-button form="programForm" [disabled]="!programForm.form.valid || !userService.isLoggedIn()">Update!</button>
+                                <button type="button" class="program-delete" mat-button (click)="deleteProgram()" [disabled]="!userService.isLoggedIn()"><mat-icon>clear</mat-icon> Delete program</button>
+                            </div>
+                        </div>
+
+                        <div class="box details-box-files">
+                            <div class="box-header">Program Files</div>
+                            <div class="box-content">
+                                <h4>Upload files by dragging them to this box</h4>
+                                <div id="fine-uploader" #fineUploader></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </mat-tab>
+            <mat-tab label="log">
+                <ng-template mat-tab-label>
+                    <mat-icon>subject</mat-icon> Log
+                </ng-template>
+                <div fxLayout="row" fxLayoutAlign="end" class="clearlog">
+                    <button mat-raised-button (click)="toggleLog();" *ngIf="trucking"><mat-icon>pause</mat-icon> Pause</button>
+                    <button mat-raised-button (click)="toggleLog();" *ngIf="!trucking"><mat-icon>play_arrow</mat-icon> Resume</button>
+                    &nbsp;&nbsp;&nbsp;<button mat-raised-button [disabled]="!userService.isLoggedIn()" (click)="clearLog();" class="clearbutton app-card-bg1"><mat-icon>clear</mat-icon> Clear Log</button>
+                </div>
+                <div class="log-content" [innerHTML]="log" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+                </div>
+            </mat-tab>
+            <mat-tab label="files" *ngIf="programFiles != null && programFiles.length > 0">
+                <ng-template mat-tab-label>
+                    <mat-icon>storage</mat-icon> Program Files
+                </ng-template>
+                <div class="tab-content">
+                    <div class="box details-box files-wrapper">
+                        <div class="box-header">Existing files for program</div>
+                        <div class="box-content">
+                            <div class="filelist-content">
+                                <span class="filelistline" *ngFor="let line of programFiles">{{line}}<br/></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="send">
+                <ng-template mat-tab-label>
+                    <mat-icon>mail_outline</mat-icon> Send message
+                </ng-template>
+                <div class="tab-content">
+                    <div class="details-wrapper">
+                        <div class="box details-box">
+                            <div class="box-header">Send message to STDIN of program</div>
+                            <div class="box-content">
+                                This sends a message string to the <code>standard input (stdin)</code> of the program.<br>
+                                Check the "append newline" to have a <strong><code>\n</code></strong> appended to the end of the message. This simulates an 'Enter' click<br/>
+                                in the console of the <code>stdin</code>, which may or may not be necessary for your program to read the input.
+
+                                <div class="box-vspace"></div>
+
+                                <form (ngSubmit)="onMessageSubmit()" #messageForm="ngForm">
+                                    <div fxLayout="row">
+                                        <mat-form-field hideRequiredMarker class="messagewidth">
+                                            <input id="message" [(ngModel)]="messageModel.message" name="message" #message="ngModel" matInput placeholder="Message to send" (focus)="messageFilteredOptions = filterOptions(messageModel.message ? messageModel.message : '', messageOptions)" (ngModelChange)="messageFilteredOptions = filterOptions(messageModel.message, messageOptions)" [matAutocomplete]="messageauto" required autofocus>
+                                            <mat-autocomplete autoActiveFirstOption #messageauto="matAutocomplete">
+                                                <mat-option *ngFor="let option of messageFilteredOptions" [value]="option">
+                                                    {{ option }}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-error>You must enter a message to send</mat-error>
+                                        </mat-form-field>
+                                        <button type="button" mat-icon-button matTooltip="Clear history" class="clearbutton" (click)="clearMessageHistory()" *ngIf="messageOptions.length > 0"><mat-icon style="font-size: 0.9em">clear</mat-icon></button>
+                                    </div>
+                                    <div fxLayout="row" class="messagewidth">
+                                        <mat-checkbox color="primary" id="newline" [(ngModel)]="messageModel.appendNewline" name="newline" #newline="ngModel">Append newline</mat-checkbox>
+                                    </div>
+                                    <div fxLayout="row" fxLayoutAlign="end" class="messagewidth">
+                                        <button type="submit" mat-raised-button [disabled]="!messageForm.form.valid || !userService.isLoggedIn()">Send</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="box details-box">
+                            <div class="box-header">Send COMM message</div>
+                            <div class="box-content">
+                                This sends an event that will be received by event listener subprocesses subscribing to the RemoteCommunicationEvent.<br/>
+                                The Supervisor instance has an internal webserver that programs can hook into and then listen to these events.
+                                <div class="box-vspace"></div>
+
+                                <form (ngSubmit)="onCommSubmit()" #commForm="ngForm">
+                                    <div fxLayout="row">
+                                        <mat-form-field hideRequiredMarker class="messagewidth">
+                                            <input id="commMessage" [(ngModel)]="commMessageModel.message" name="commMessage" #commMessage="ngModel" matInput placeholder="Message to send" (focus)="commMessageFilteredOptions = filterOptions(commMessageModel.message ? commMessageModel.message : '', commMessageOptions)" (ngModelChange)="commMessageFilteredOptions = filterOptions(commMessageModel.message, commMessageOptions)" [matAutocomplete]="commmessageauto" required>
+                                            <mat-autocomplete autoActiveFirstOption #commmessageauto="matAutocomplete">
+                                                <mat-option *ngFor="let option of commMessageFilteredOptions" [value]="option">
+                                                    {{ option }}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-error>You must enter a message to send</mat-error>
+                                        </mat-form-field>
+                                        <button type="button" mat-icon-button matTooltip="Clear message history" class="clearbutton" (click)="clearCommMessageHistory()" *ngIf="commMessageOptions.length > 0"><mat-icon style="font-size: 0.9em">clear</mat-icon></button>
+                                    </div>
+                                    <div fxLayout="row">
+                                        <mat-form-field hideRequiredMarker class="messagewidth">
+                                            <input id="commMessageType" [(ngModel)]="commMessageModel.messageType" name="commTypeMessage" #commTypeMessage="ngModel" matInput placeholder="Type of Message" (focus)="commMessageTypeFilteredOptions = filterOptions(commMessageModel.messageType ? commMessageModel.messageType : '', commMessageTypeOptions)" (ngModelChange)="commMessageTypeFilteredOptions = filterOptions(commMessageModel.messageType, commMessageTypeOptions)" [matAutocomplete]="commmessagetypeauto" required>
+                                            <mat-autocomplete autoActiveFirstOption #commmessagetypeauto="matAutocomplete">
+                                                <mat-option *ngFor="let option of commMessageTypeFilteredOptions" [value]="option">
+                                                    {{ option }}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-error>You must enter the type of the message</mat-error>
+                                        </mat-form-field>
+                                        <button type="button" mat-icon-button matTooltip="Clear type history" class="clearbutton" (click)="clearCommMessageTypeHistory()" *ngIf="commMessageTypeOptions.length > 0"><mat-icon style="font-size: 0.9em">clear</mat-icon></button>
+                                    </div>
+                                    <div fxLayout="row" class="messagewidth">
+                                        <mat-checkbox color="primary" id="commnewline" [(ngModel)]="commMessageModel.appendNewline" name="commnewline" #commnewline="ngModel">Append newline</mat-checkbox>
+                                    </div>
+                                    <div fxLayout="row" fxLayoutAlign="end" class="messagewidth">
+                                        <button type="submit" mat-raised-button [disabled]="!commForm.form.valid || !userService.isLoggedIn()">Send</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="signal">
+                <ng-template mat-tab-label>
+                    <mat-icon>trending_flat</mat-icon> Send Signal
+                </ng-template>
+                <div class="tab-content">
+                    <div class="signal-wrapper">
+                        <div class="box details-box">
+                            <div class="box-header">Send a signal to program</div>
+                            <div class="box-content">
+                                Use this to send an arbitrary UNIX signal to the program on the Supervisor instance.<br/>
+                                The <code>signal</code> to be sent can be a name e.g. 'HUP' or number '1'.<br/>
+                                To get a list of the possible signals, go to a node and type <code>kill -l</code>.
+                                <div class="box-vspace"></div>
+
+                                <form (ngSubmit)="onSignalSubmit()" #signalForm="ngForm">
+                                    <div fxLayout="row">
+                                        <mat-form-field hideRequiredMarker class="messagewidth">
+                                            <input id="signal" [(ngModel)]="signalModel.message" name="signal" #signal="ngModel" matInput placeholder="Signal to send"  (focus)="signalFilteredOptions = filterOptions(signalModel.message ? signalModel.message : '', signalOptions)" (ngModelChange)="signalFilteredOptions = filterOptions(signalModel.message, signalOptions)" [matAutocomplete]="signalauto" required autofocus>
+                                            <mat-autocomplete autoActiveFirstOption #signalauto="matAutocomplete">
+                                                <mat-option *ngFor="let option of signalFilteredOptions" [value]="option">
+                                                    {{ option }}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-error>You must enter a signal to send</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div fxLayout="row" class="messagewidth">
+                                        <!--<mat-checkbox color="primary" id="newline" [(ngModel)]="messageModel.appendNewline" name="newline" #newline="ngModel">Append newline</mat-checkbox>-->
+                                    </div>
+                                    <div fxLayout="row" fxLayoutAlign="end" class="messagewidth">
+                                        <button type="submit" mat-raised-button [disabled]="!signalForm.form.valid || !userService.isLoggedIn()">Send</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+
+    </mat-card-content>
+</mat-card>
+

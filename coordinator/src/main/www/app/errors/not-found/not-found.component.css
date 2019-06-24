@@ -1,0 +1,14 @@
+.notfound {
+    text-align: center;
+}
+
+.background {
+    display: inline-block;
+    background: url('/assets/images/paperplanebg.png');
+    background-repeat: no-repeat;
+    background-position: right -25px top -10px;
+    margin-top: 50px ;
+    padding-top: 40px;
+    padding-right: 30px;
+    padding-left: 30px;
+}

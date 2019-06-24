@@ -1,0 +1,42 @@
+<mat-table #table [dataSource]="programsInfo" *ngIf="programsInfo">
+    <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.name}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="group">
+        <mat-header-cell *matHeaderCellDef>Group</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.group}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.description}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="pid">
+        <mat-header-cell *matHeaderCellDef>PID</mat-header-cell>
+        <mat-cell *matCellDef="let element"><span *ngIf="element.pid > 0">{{element.pid}}</span></mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="state">
+        <mat-header-cell *matHeaderCellDef>State</mat-header-cell>
+        <mat-cell *matCellDef="let element"><div class="icon-button"
+                                                 [class.process-state-color-red]="element.state == 0 || element.state == 100 || element.state == 200"
+                                                 [class.process-state-color-green]="element.state == 20"
+                                                 [class.process-state-color-orange]="element.state == 10 || element.state == 30 || element.state == 40"
+                                                 [class.process-state-color-blue]="element.state == 1000">
+            {{element.statename}}</div></mat-cell>
+    </ng-container><ng-container matColumnDef="control">
+        <mat-header-cell *matHeaderCellDef>Control</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            <!--bg1=red, bg2=blue, bg3=orange,bg4=green,bg5=purple-->
+            <div class="icon-button" [class.app-card-bg4]="element.state == 20" [class.app-card-bg3]="element.state == 10 || element.state == 30">
+                <button mat-icon-button (click)="start(element.name); $event.stopPropagation();" [disabled]="element.state == 20 || !userService.isLoggedIn()" matTooltip="Start {{element.name}}"><mat-icon>play_arrow</mat-icon></button></div>
+            <div class="icon-button" [class.app-card-bg1]="element.state == 0" [class.app-card-bg3]="element.state == 40 || element.state == 100 || element.state == 200" [class.app-card-bg2]="element.state == 1000">
+                <button mat-icon-button (click)="stop(element.name); $event.stopPropagation();" [disabled]="element.state == 0 || !userService.isLoggedIn()" matTooltip="Stop {{element.name}}"><mat-icon>stop</mat-icon></button></div>
+            <div class="icon-button">
+                <button mat-icon-button (click)="restart(element.name); $event.stopPropagation();" [disabled]="!userService.isLoggedIn()" matTooltip="Restart {{element.name}}"><mat-icon>replay</mat-icon></button></div>
+            <div class="icon-button">
+                <button mat-icon-button (click)="log(element.name); $event.stopPropagation();" matTooltip="Show log for {{element.name}}"><mat-icon>subject</mat-icon></button></div>
+        </mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selectRow(row)"></mat-row>
+</mat-table>

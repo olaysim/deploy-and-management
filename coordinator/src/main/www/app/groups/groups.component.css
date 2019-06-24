@@ -1,0 +1,30 @@
+.cardGroups {
+    background-color: #ffffff;
+    min-height: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.cardWideContent {
+    padding: 10px 20px;
+}
+
+.material-icons {
+    /*font-size: 1.5em;*/
+    vertical-align: middle;
+}
+
+.messagewidth {
+    width: 350px;
+}
+
+.messagewidth_long {
+    width: 650px;
+}
+.messagewidth_short {
+    width: 280px;
+}
+.short_space {
+    width: 90px;
+}

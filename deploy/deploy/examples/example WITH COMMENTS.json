@@ -1,0 +1,52 @@
+# NOTE: a json file can't have comments, this file won't work, but read on
+# you don't need to use every option in this file, basically only the token and program name is needed
+# and the changes you want to make or set. (command is required when creating an new program)
+{
+    "host": "syslab-03.syslab.dk", # the node to use as deployment agent
+    "nodes": [                     # list of nodes to deploy to (in parallel)
+        "syslab-01",
+        "syslab-02"
+    ],
+    
+	"token": "xxxyyyzzz",          # the authentication token
+	"name": "programname",         # the name to use to identify the program and to use with other REST API commands
+	"command": "java -jar program.jar", # the command to run the program with
+	"priority": 999,               # OPTIONAL, default value is 999
+	"autostart": true,             # OPTIONAL, default value is true
+	"autorestart": "unexpected",   # OPTIONAL, default value is "unexpected" other values are "false", "unexpected", "true"
+	"startsecs": 1,                # OPTIONAL, default value is 1
+	"startretries": 3,             # OPTIONAL, default value is 3
+	"exitcodes": "0,2",            # OPTIONAL, default value is "0,2"
+	"stopwaitsecs": 10,            # OPTIONAL, default value is 10
+	"environment": "",             # OPTIONAL, default value is ""
+    # for a detailed description of these options, please read the documentation
+    
+	"files": [                     # define files on an individual basis
+        "C:/projects/cool-program/program-file.bin",
+        "C:\\anotherfolder\\greatfile.txt",
+        "/builds/syslab/syslab-something/target/super.jar"
+    ],
+    # in an automated GitLab build, the full path is /builds/<git username or group>/<git repository>/..source... <-- now you're inside the source tree
+    
+	"folders": {                   # define folders to upload, a definition consist of a base folder and the actual folder to upload
+                                   # the base folder is used as the relative basedir and the rest of the path in the actual foler is reconstructed on the nodes
+        "C:/projects/cool-program": "C:/projects/cool-program",
+        "C:/projects/other-folder": "C:/projects/other-folder/folder"
+    },
+    
+	"paths": {                     # define relative paths, consists of the filename and then the relative folder structure
+		"program-file.bin": "folder1/folder2",
+		"crazy-file": "goes/here"
+	},
+    
+    "transforms": {                # define renaming of files specific to each node, here you can define what files
+                                   # should be renamed on which nodes. Consists of the original filename and the new filename
+        "syslab-01": {
+            "syslab-01.config.xml": "config.xml",
+            "syslab-01.settings.xml": "settings.xml"
+        },
+        "syslab-02": {
+            "syslab-02.config.xml": "config.xml"
+        }	
+	}
+}

@@ -1,0 +1,17 @@
+<mat-expansion-panel [@.disabled]="chrome">
+    <mat-expansion-panel-header #myheader>
+        <a routerLink="/nodes" class="titlelink">Distributed</a>
+    </mat-expansion-panel-header>
+    <div>
+        <a routerLink="/nodes/control"><mat-icon>keyboard_arrow_right</mat-icon>Control</a>
+    </div>
+    <div>
+        <a routerLink="/nodes/upload"><mat-icon>keyboard_arrow_right</mat-icon>Upload</a>
+    </div>
+    <div>
+        <a routerLink="/nodes/info"><mat-icon>keyboard_arrow_right</mat-icon>Info</a>
+    </div>
+    <div>
+        <a routerLink="/nodes/log"><mat-icon>keyboard_arrow_right</mat-icon>Log</a>
+    </div>
+</mat-expansion-panel>

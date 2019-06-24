@@ -1,0 +1,89 @@
+<mat-card class="newDetails">
+    <mat-card-header class="app-card-bg4 cardHeader">
+        <mat-card-title>New Program</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="cardBodyContent">
+
+        <div class="box new-box-program">
+            <div class="box-header">Program Details</div>
+            <div class="box-content">
+                <form (ngSubmit)="onProgramSubmit()" id="programForm" #programForm="ngForm">
+                    <div fxLayout="row">
+                        <mat-form-field hideRequiredMarker class="messagewidth_long">
+                            <input id="programname" [(ngModel)]="programModel.name" name="programname" #programname="ngModel" matInput placeholder="Program name" required autofocus>
+                            <mat-error>You must enter a name for the program</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="row">
+                        <mat-form-field hideRequiredMarker class="messagewidth_long">
+                            <input id="command" [(ngModel)]="programModel.command" name="command" #command="ngModel" matInput placeholder="Command" required>
+                            <mat-error>You must enter a command to start the program</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="row">
+                        <mat-checkbox color="primary" id="autostart" [(ngModel)]="programModel.autostart" name="autostart" #autostart="ngModel">Autostart program</mat-checkbox>
+                    </div>
+                    <div fxLayout="row">
+                        <mat-form-field hideRequiredMarker class="messagewidth_short">
+                            <input type="number" min="0" id="priority" [(ngModel)]="programModel.priority" name="priority" #priority="ngModel" matInput placeholder="Priority (default 999)">
+                            <mat-error>You must enter a priority for the program</mat-error>
+                        </mat-form-field>
+                        <div class="short_space"></div>
+                        <mat-form-field hideRequiredMarker class="messagewidth_short">
+                            <mat-select id="autorestart" [(ngModel)]="programModel.autorestart" name="autorestart" #autorestart="ngModel" placeholder="Autorestart (default 'unexpected')">
+                                <mat-option>unexpected</mat-option>
+                                <mat-option>true</mat-option>
+                                <mat-option>false</mat-option>
+                            </mat-select>
+                            <mat-error>You must select an autorestart reason</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="row">
+                        <mat-form-field hideRequiredMarker class="messagewidth_short">
+                            <input type="number" min="1" id="startsecs" [(ngModel)]="programModel.startsecs" name="startsecs" #startsecs="ngModel" matInput placeholder="Start Seconds (default 1)">
+                            <mat-error>You must enter the number of seconds to wait for the program to start</mat-error>
+                        </mat-form-field>
+                        <div class="short_space"></div>
+                        <mat-form-field hideRequiredMarker class="messagewidth_short">
+                            <input type="number" min="1" id="startretries" [(ngModel)]="programModel.startretries" name="startretries" #startretries="ngModel" matInput placeholder="Start Retries (default 3)">
+                            <mat-error>You must enter the number of retries for starting the program</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="row">
+                        <mat-form-field hideRequiredMarker class="messagewidth_short">
+                            <input id="exitcodes" [(ngModel)]="programModel.exitcodes" name="exitcodes" #exitcodes="ngModel" matInput placeholder="Exit Codes (default '0, 2')">
+                            <mat-error>You must enter the exit codes for the program</mat-error>
+                        </mat-form-field>
+                        <div class="short_space"></div>
+                        <mat-form-field hideRequiredMarker class="messagewidth_short">
+                            <input type="number" min="1" id="stopwaitsecs" [(ngModel)]="programModel.stopwaitsecs" name="stopwaitsecs" #stopwaitsecs="ngModel" matInput placeholder="Stop Wait Seconds (default 10)">
+                            <mat-error>You must enter the number of seconds to wait for the program to stop</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="row">
+                        <mat-form-field hideRequiredMarker class="messagewidth_long">
+                            <input id="environment" [(ngModel)]="programModel.environment" name="environment" #environment="ngModel" matInput placeholder="Environment">
+                            <mat-error>You must enter a string of values defining the environment</mat-error>
+                        </mat-form-field>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="box new-box-files">
+            <div class="box-header">Program Files</div>
+            <div class="box-content">
+                <h4>Upload files by dragging them to this box</h4>
+                <div id="fine-uploader" #fineUploader></div>
+            </div>
+
+            <div class="vspace"></div>
+            <div fxLayout="row" fxLayoutAlign="end">
+                <button type="submit" class="new-submit app-card-bg4" mat-raised-button form="programForm" [disabled]="!programForm.form.valid || !userService.isLoggedIn() || !hasFiles()">Upload!</button>
+            </div>
+            <div class="vspace"></div>
+        </div>
+
+
+    </mat-card-content>
+</mat-card>

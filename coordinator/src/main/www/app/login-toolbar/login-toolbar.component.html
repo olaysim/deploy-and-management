@@ -1,0 +1,3 @@
+<span class="displayname" *ngIf="screenWidth > 500 && userService.isLoggedIn()">({{userService.getDisplayName()}})</span>
+<button mat-icon-button (click)="logout()" *ngIf="userService.isLoggedIn()">Logout</button>
+<button mat-icon-button (click)="login()" *ngIf="!userService.isLoggedIn()">Login</button>

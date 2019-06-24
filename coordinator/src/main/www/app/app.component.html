@@ -1,0 +1,41 @@
+<mat-toolbar color="primary">
+    <span [ngStyle]="{'display' : (screenWidth > 840) ? 'none' : 'block'}" style="padding-right: 10px"><button mat-icon-button (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button></span>
+    <span><a routerLink="/" class="toolbar-title"><span class="neoSansBold">SYSLAB</span> <span class="neoSans" [hidden]="screenWidth < 500">Supervisor</span></a></span>
+    <span class="toolbar-fill"></span>
+    <!--<span>{{}}</span>-->
+    <!--<span class="toolbar-fill"></span>-->
+    <mat-menu #appMenu="matMenu" yPosition="below" [overlapTrigger]="false">
+        <a href="/docs/index.html"><button mat-menu-item><mat-icon>description</mat-icon><span>REST API</span></button></a>
+        <a href="/javadoc/index.html"><button mat-menu-item><mat-icon>chrome_reader_mode</mat-icon><span>JavaDoc</span></button></a>
+    </mat-menu>
+    <button mat-icon-button [matMenuTriggerFor]="appMenu">
+        Docs
+    </button>
+    <span class="space"></span>
+    <app-login-toolbar></app-login-toolbar>
+    <span class="space"></span>
+</mat-toolbar>
+
+<mat-sidenav-container>
+    <mat-sidenav #sidenav opened="true" [disableClose]="screenWidth > 840" [opened]="screenWidth > 840" [mode]="(screenWidth > 840) ? 'side' : 'over'">
+        <section class="mat-typography">
+            <nav>
+                <a routerLink="/" class="firstnavelement">Dashboard</a>
+                <app-nav-processes></app-nav-processes>
+                <a routerLink="/token">Token</a>
+                <app-nav-distributed></app-nav-distributed>
+                <a routerLink="/groups">Groups</a>
+            </nav>
+        </section>
+    </mat-sidenav>
+
+    <mat-sidenav-content [class.open]="screenWidth < 840">
+        <div class="errormessage app-component-error" *ngIf="errorMessage.errorMessage">{{errorMessage.errorMessage}}</div>
+        <app-spinner *ngIf="showSpinner"></app-spinner>
+        <div class="containerWrapper" [hidden]="showSpinner">
+            <section class="mat-typography">
+                <router-outlet></router-outlet>
+            </section>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

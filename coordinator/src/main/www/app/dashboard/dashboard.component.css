@@ -1,0 +1,45 @@
+.card {
+    background-color: #ffffff;
+    height: 150px;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.cardWideContent {
+    padding: 10px 20px;
+}
+
+.cardStats {
+    background-color: #ffffff;
+    min-height: 240px;
+    max-width: 100%;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.cardProcesslist {
+    background-color: #ffffff;
+    min-height: calc(100% - 440px);
+    max-width: 100%;
+    padding: 0;
+}
+
+.nodelist {
+    font-size: 0.8em;
+}
+
+.syschart {
+    float: left;
+    width: 25%;
+    min-width: 350px;
+    min-height: 200px;
+}
+
+.addprogram {
+    padding: 20px;
+}
+
+button {
+    background-color: #38ad00;
+    color: #ffffff;
+}

@@ -1,0 +1,44 @@
+{
+    "host": "syslab-03.syslab.dk",
+    "nodes": [
+        "syslab-01",
+        "syslab-02"
+    ],
+    
+	"token": "xxxyyyzzz",
+	"name": "programname",
+	"command": "java -jar program.jar",
+	"priority": 999,
+	"autostart": true,
+	"autorestart": "unexpected",
+	"startsecs": 1,
+	"startretries": 3,
+	"exitcodes": "0,2",
+	"stopwaitsecs": 10,
+	"environment": "",
+    
+	"files": [
+        "C:/projects/cool-program/program-file.bin",
+        "C:\\anotherfolder\\greatfile.txt"
+    ],
+    
+	"folders": {
+        "C:/projects/cool-program": "C:/projects/cool-program",
+        "C:/projects/other-folder": "C:/projects/other-folder/folder"
+    },
+    
+	"paths": {
+		"program-file.bin": "folder1/folder2",
+		"crazy-file": "goes/here"
+	},
+    
+    "transforms": {
+        "syslab-01": {
+            "syslab-01.config.xml": "config.xml",
+            "syslab-01.settings.xml": "settings.xml"
+        },
+        "syslab-02": {
+            "syslab-02.config.xml": "config.xml"
+        }	
+	}
+}

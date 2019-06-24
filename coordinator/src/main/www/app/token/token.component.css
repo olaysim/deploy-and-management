@@ -1,0 +1,41 @@
+.cardToken {
+    background-color: #ffffff;
+    min-height: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.cardWideContent {
+    padding: 10px 20px;
+}
+
+.material-icons {
+    /*font-size: 1.5em;*/
+    vertical-align: middle;
+}
+
+.messagewidth {
+    width: 200px;
+}
+
+.tokenbutton {
+    min-width: 600px;
+    float: left;
+    text-align: right;
+}
+
+.tokenarea {
+    min-width: 600px;
+    min-height: 200px;
+    box-shadow: 0px 0px 1px 1px rgba(0,0,0,0.4);
+}
+
+textarea.mat-input-element {
+    resize: both !important;
+}
+
+.token-box {
+    max-width: 700px;
+    min-height: 400px;
+}

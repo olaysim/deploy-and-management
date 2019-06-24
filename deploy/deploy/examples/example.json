@@ -1,0 +1,16 @@
+{
+    "host": "syslab-03.syslab.dk",
+    "nodes": [
+        "syslab-01",
+        "syslab-02"
+    ],
+    
+	"token": "xxxyyyzzz",
+	"name": "programname",
+	"command": "java -jar program.jar",
+	"exitcodes": "143",
+    
+	"folders": {
+        "C:/projects/cool-program": "C:/projects/cool-program"
+    }
+}

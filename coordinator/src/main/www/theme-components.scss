@@ -1,0 +1,67 @@
+@import '~@angular/material/theming';
+
+@mixin component-theme($theme) {
+    $primary: map-get($theme, primary);
+    $accent: map-get($theme, accent);
+    $warn: map-get($theme, warn);
+    //$foreground: map-get($theme, foreground);
+    //$background: map-get($theme, background);
+
+    .toolbar-title {
+        color: mat-color($primary, 50);
+    }
+
+    //.toolbar-title:hover {
+    //    color: mat-color($primary, 100);
+    //}
+
+    //.mat-snack-bar-container {
+    //    background-color: mat-color($accent, 700);
+    //}
+
+    app-notificationbar > span > mat-icon.warning {
+        color: mat-color($warn);
+    }
+    app-notificationbar > span > mat-icon.error {
+        color: mat-color($primary, 400);
+    }
+    app-notificationbar > span > mat-icon.check_circle {
+        color: #38ad00;
+    }
+
+    .app-component-error {
+        background-color: mat-color($warn, 700);
+    }
+
+    .app-card-bg1 {
+        background-color: mat-color($primary, 400); // red
+    }
+    .app-card-bg2 {
+        background-color: mat-color($accent, 900); // blue
+    }
+    .app-card-bg3 {
+        //background-color: mat-color($warn, 700); // orange
+        background-color: #ff5e00;
+    }
+    .app-card-bg4 {
+        background-color: #38ad00; // green
+    }
+    .app-card-bg5 {
+        background-color: #a8267d; // purple
+    }
+
+    .process-state-color-red {
+        border-bottom: 3px solid mat-color($primary, 400); // red
+    }
+    .process-state-color-green {
+        border-bottom: 3px solid #38ad00; // green
+    }
+    .process-state-color-orange {
+        border-bottom: 3px solid #ff5e00;
+    }
+    .process-state-color-blue {
+        border-bottom: 3px solid mat-color($accent, 900); // blue
+    }
+
+
+}

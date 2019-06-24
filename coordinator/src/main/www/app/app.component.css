@@ -1,0 +1,56 @@
+.mat-drawer {
+    background-color: #424242;
+}
+
+/*.container {*/
+    /*box-shadow: 1px 2px 5px 3px #ccc;*/
+    /*border-radius: 4px;*/
+    /*background-color: #ffffff;*/
+    /*min-height: calc(100% - 20px) !important;*/
+/*}*/
+
+.containerWrapper {
+    height: calc(100% - 10px);
+    min-height: calc(100% - 10px) !important;
+}
+
+.mat-typography {
+    height: 100%;
+    min-height: 100% !important;
+}
+
+.open {
+    width: calc(100% - 40px) !important;
+}
+
+nav {
+    background-color: #ffffff;
+}
+
+nav a, nav a:visited, nav a:link {
+    padding: 10px 10px 0px 10px;
+    text-decoration: none;
+    color: #000000;
+    margin-top: 1px;
+    display: block;
+    background-color: #ffffff;
+    height: 30px;
+    width: calc(100% - 21px);
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+}
+
+nav a:hover {
+    background-color: #eeeeee;
+}
+
+.firstnavelement {
+    margin-top: 0px !important;
+}
+
+.errormessage {
+    /*width: 100%;*/
+    margin: -10px -20px 10px -20px;
+    padding: 10px 20px;
+    color: #ffffff;
+    text-align: center;
+}

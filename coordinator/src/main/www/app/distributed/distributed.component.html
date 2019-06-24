@@ -1,0 +1,40 @@
+<mat-card class="cardDistributed">
+    <mat-card-header class="app-card-bg4 cardHeader">
+        <mat-card-title>Distributed Operations</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="cardWideContent">
+        <!--<div class="box token-box">-->
+            <!--<div class="box-header">Generate a token for programmatic access</div>-->
+            <!--<div class="box-content">-->
+                <!--The token that you get when authenticating with /api/auth is only valid for a limited amount of time. If you need a token for a program / m2m, then you should use this form to generate a token that will last a long time.<br/>-->
+                <!--Normal users can generate a token that is valid up to 60 days.<br/>-->
+                <!--Admin users can generate a token that is valid for as long as they feel like. (But please be careful...​ a token with "unlimited" validity is a catastrophic security hole in our system!)<br/>-->
+                <!--<div class="box-vspace"></div>-->
+
+                <!--<form (ngSubmit)="onGenerateSubmit()" #tokenForm="ngForm">-->
+                <!--<div fxLayout="row">-->
+                <!--<p><mat-form-field hideRequiredMarker class="messagewidth">-->
+                <!--<input type="number" id="days" [(ngModel)]="tokenModel.days" name="days" #days="ngModel" matInput placeholder="Number of valid days" min="1" required autofocus>-->
+                <!--<mat-error>You must enter a number of valid days</mat-error>-->
+                <!--</mat-form-field></p>-->
+                <!--</div>-->
+                <!--<div fxLayout="row" class="messagewidth">-->
+                <!--<p><mat-checkbox color="primary" id="admin" [(ngModel)]="tokenModel.admin" name="admin" #admin="ngModel" [disabled]="!isAdmin" matTooltip="You should probably never click this checkbox!" matTooltipShowDelay="500">Give token ADMIN privileges</mat-checkbox></p>-->
+                <!--</div>-->
+                <!--<div fxLayout="row" fxLayoutAlign="end" class="messagewidth">-->
+                <!--<p><button type="submit" mat-raised-button [disabled]="!tokenForm.form.valid || !userService.isLoggedIn()">Generate</button></p>-->
+                <!--</div>-->
+                <!--</form>-->
+
+                <!--<br/><h3>Generated Token</h3>-->
+                <!--<div fxLayout="row">-->
+                <!--<p><textarea id="token" name="token" matInput class="tokenarea" placeholder="Generated Token" readonly>{{generatedToken}}</textarea></p>-->
+                <!--</div>-->
+                <!--<div class="tokenbutton">-->
+                <!--<p><button mat-raised-button [disabled]="generatedToken == null" (click)="copyTokenToClipboard()">Copy</button></p>-->
+                <!--</div>-->
+                <!--<div style="clear: both;"></div>-->
+            <!--</div>-->
+        <!--</div>-->
+    </mat-card-content>
+</mat-card>

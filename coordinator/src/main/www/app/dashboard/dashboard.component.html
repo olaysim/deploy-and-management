@@ -1,0 +1,159 @@
+<div fxLayout="row wrap" fxLayoutGap="20px">
+
+    <mat-card class="card" fxFlex="400px">
+        <mat-card-header class="app-card-bg1 cardHeader">
+            <mat-card-title>Supervisor</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="cardContent">
+            <table *ngIf="supervisorInfo">
+                <tr>
+                    <td><i>API / Package Version:</i></td>
+                    <td>&nbsp;&nbsp;</td>
+                    <td>{{supervisorInfo.apiVersion}} / {{supervisorInfo.packageVersion}}</td>
+                </tr>
+                <tr>
+                    <td><i>Supervisor State:</i></td>
+                    <td></td>
+                    <td>{{supervisorInfo.state}}</td>
+                </tr>
+                <tr *ngIf="nodelist">
+                    <td><i>Number of Supervisors:</i></td>
+                    <td></td>
+                    <td>{{nodelist.statistics['supervisors-total']}}</td>
+                </tr><tr *ngIf="nodelist">
+                    <td><i>Number of running Supervisors:</i></td>
+                    <td></td>
+                    <td>{{nodelist.statistics['supervisors-running']}}/{{nodelist.statistics['supervisors-total']}}</td>
+                </tr>
+            </table>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="card" fxFlex="400px">
+        <mat-card-header class="app-card-bg4 cardHeader">
+            <mat-card-title>Processes</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="cardContent">
+            <table *ngIf="programsInfo">
+                <tr>
+                    <td><i>Number of processes:</i></td>
+                    <td>&nbsp;&nbsp;</td>
+                    <td>{{programsInfo.length}}</td>
+                </tr>
+                <tr>
+                    <td><i>Running processes:</i></td>
+                    <td></td>
+                    <td>{{getRunning()}}/{{programsInfo.length}}</td>
+                </tr>
+                <tr *ngIf="nodelist">
+                    <td><i>Number of distributed processes:</i></td>
+                    <td></td>
+                    <td>{{nodelist.statistics['processes-total']}}</td>
+                </tr>
+                <tr *ngIf="nodelist">
+                    <td><i>Running distributed processes:</i></td>
+                    <td></td>
+                    <td>{{nodelist.statistics['processes-running']}}/{{nodelist.statistics['processes-total']}}</td>
+                </tr>
+            </table>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="card" fxFlex>
+        <div style="min-width: 450px;">
+        <mat-card-header class="app-card-bg2 cardHeader">
+            <mat-card-title>System</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="cardContent">
+            <table *ngIf="systemInformation">
+                <tr>
+                    <td><i>Operating System:</i></td>
+                    <td>&nbsp;&nbsp;</td>
+                    <td>{{systemInformation.os}}</td>
+                </tr>
+                <tr>
+                    <td><i>Baseboard Manufacturer:</i></td>
+                    <td></td>
+                    <td>{{systemInformation.baseboardManufacturer}} ({{systemInformation.baseboardModel}})</td>
+                </tr>
+                <tr>
+                    <td><i>Number of CPU / Logical CPU:</i></td>
+                    <td></td>
+                    <td>{{systemInformation.cpu}}/{{systemInformation.logicalCpu}}</td>
+                </tr>
+                <tr>
+                    <td><i>Total Memory / Swap:</i></td>
+                    <td></td>
+                    <td>{{systemInformation.memoryStr}} / {{systemInformation.swapStr}}</td>
+                </tr>
+            </table>
+        </mat-card-content>
+        </div>
+    </mat-card>
+</div>
+
+<mat-card class="cardStats">
+    <mat-card-header class="app-card-bg3 cardHeader">
+        <mat-card-title>System Statistics</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="cardWideContent">
+        <div fxLayout="row wrap" style="text-align: center">
+            <!--<div fxFlex="25%">-->
+                <div class="syschart">
+                <canvas #cpuChart=base-chart
+                    baseChart
+                    [chartType]="'line'"
+                    [datasets]="cpuSource"
+                    [labels]="labels"
+                    [options]="cpuOptions"
+                    [legend]="true"></canvas>
+                </div>
+            <!--</div>-->
+            <!--<div fxFlex="25%">-->
+                <div class="syschart">
+                <canvas #loadChart=base-chart
+                    baseChart
+                    [chartType]="'line'"
+                    [datasets]="loadSource"
+                    [labels]="labels"
+                    [options]="loadOptions"
+                    [legend]="true"></canvas>
+                </div>
+            <!--</div>-->
+            <!--<div fxFlex="25%">-->
+                <div class="syschart">
+                <canvas #memChart=base-chart
+                    baseChart
+                    [chartType]="'line'"
+                    [datasets]="memSource"
+                    [labels]="labels"
+                    [options]="memOptions"
+                    [legend]="true"></canvas>
+                </div>
+            <!--</div>-->
+            <!--<div fxFlex="25%">-->
+                <div class="syschart">
+                <canvas #swapChart=base-chart
+                    baseChart
+                    [chartType]="'line'"
+                    [datasets]="swapSource"
+                    [labels]="labels"
+                    [options]="swapOptions"
+                    [legend]="true"></canvas>
+                </div>
+            <!--</div>-->
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<mat-card class="cardProcesslist">
+    <mat-card-header class="app-card-bg5 cardHeader">
+        <mat-card-title>Process Information</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="cardBodyContent">
+        <app-process-list [onDashboard]="true"></app-process-list>
+        <div fxLayout="row" fxLayoutAlign="end" class="addprogram">
+            <button mat-raised-button *ngIf="userService.isLoggedIn()" (click)="addProgram();"><mat-icon>add</mat-icon> New Program</button>
+        </div>
+    </mat-card-content>
+</mat-card>
